@@ -1,0 +1,1442 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="桃園市即時天氣、逐時預報、十三區氣溫、空氣品質與近三十天回顧。">
+<title>桃園天氣</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230B8F84'/%3E%3Ccircle cx='16' cy='13' r='5' fill='%23EDF1F0'/%3E%3C/svg%3E">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --surface:#EDF1F0;      /* 台地霧色 */
+  --surface-2:#E3E9E7;
+  --ink:#12302F;          /* 埤塘深墨 */
+  --ink-2:#4F6361;
+  --muted:#7C8E8C;
+  --hair:#CBD5D3;
+  --hair-2:#DCE3E1;
+  --teal:#0B8F84;         /* 埤塘 */
+  --teal-ink:#0A6D65;
+  --clay:#B85C3A;         /* 台地紅土：氣溫 */
+  --rain:#3B6FD6;         /* 雨 */
+  --sun:#D28E1B;          /* 日光，只用於圖示 */
+  --tip-bg:#12302F; --tip-ink:#EDF1F0;
+  --sky-night:#163B3F; --sky-day:#C9DEE3; --sky-overcast:#A7B7BA; --sky-dusk:#E4A85C;
+  --t1:#DA9878; --t2:#C7724D; --t3:#B25535; --t4:#8F3A1F; --t5:#66260F;
+  --b1:#7FA6E6; --b2:#5A86DC; --b3:#3B6FD6; --b4:#2A54AE; --b5:#1B3B80;
+  --g1:#6FB8B0; --g2:#3FA098; --g3:#0B8F84; --g4:#0A6D65; --g5:#0A4E48;
+  --v1:#A48CD6; --v2:#8A6CC9; --v3:#7150B5; --v4:#57398F; --v5:#3D2668;
+  --ground:#E3E9E7; --grid:#D3DCDA;
+  --aqi1:#2E8B57; --aqi2:#C9A227; --aqi3:#D97C2B; --aqi4:#C7423B; --aqi5:#8B4A9E; --aqi6:#7A2B3D;
+  --focus:#0B8F84;
+  --radius:6px;
+  --font-tc:"Noto Sans TC","PingFang TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
+  --font-num:"Bricolage Grotesque","Noto Sans TC",system-ui,sans-serif;
+}
+:root[data-theme="dark"]{
+  --surface:#0B1428; --surface-2:#12203A; --ink:#E4EAF5; --ink-2:#B3BFD6; --muted:#8794AE;
+  --hair:#263654; --hair-2:#1B2A44; --teal:#2AA9A0; --teal-ink:#5CC4BB; --clay:#D4714B; --rain:#5E8BE0; --sun:#E0A64A;
+  --tip-bg:#E4EAF5; --tip-ink:#0B1428;
+  --sky-night:#0A1530; --sky-day:#6F95B8; --sky-overcast:#4B5F7A; --sky-dusk:#C9823E;
+  --t1:#843F22; --t2:#A85433; --t3:#C86D49; --t4:#DF906E; --t5:#F0B497;
+  --b1:#2B4A8F; --b2:#3A62B8; --b3:#5586DD; --b4:#7FA6EC; --b5:#A9C4F3;
+  --g1:#145E58; --g2:#1E7F78; --g3:#25A399; --g4:#5CBFB6; --g5:#8FD6CF;
+  --v1:#523C92; --v2:#6E53B6; --v3:#8A6FD0; --v4:#A995E0; --v5:#C7B8EC;
+  --ground:#101C33; --grid:#1C2C48;
+  --aqi1:#4CAF72; --aqi2:#D9B33A; --aqi3:#E8944A; --aqi4:#E06058; --aqi5:#B57CC8; --aqi6:#C25A70;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surface:#0B1428; --surface-2:#12203A; --ink:#E4EAF5; --ink-2:#B3BFD6; --muted:#8794AE;
+    --hair:#263654; --hair-2:#1B2A44; --teal:#2AA9A0; --teal-ink:#5CC4BB; --clay:#D4714B; --rain:#5E8BE0; --sun:#E0A64A;
+    --tip-bg:#E4EAF5; --tip-ink:#0B1428;
+    --sky-night:#0A1530; --sky-day:#6F95B8; --sky-overcast:#4B5F7A; --sky-dusk:#C9823E;
+    --t1:#843F22; --t2:#A85433; --t3:#C86D49; --t4:#DF906E; --t5:#F0B497;
+    --b1:#2B4A8F; --b2:#3A62B8; --b3:#5586DD; --b4:#7FA6EC; --b5:#A9C4F3;
+    --g1:#145E58; --g2:#1E7F78; --g3:#25A399; --g4:#5CBFB6; --g5:#8FD6CF;
+    --v1:#523C92; --v2:#6E53B6; --v3:#8A6FD0; --v4:#A995E0; --v5:#C7B8EC;
+    --ground:#101C33; --grid:#1C2C48;
+    --aqi1:#4CAF72; --aqi2:#D9B33A; --aqi3:#E8944A; --aqi4:#E06058; --aqi5:#B57CC8; --aqi6:#C25A70;
+  }
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{background:var(--surface);color:var(--ink);font-family:var(--font-tc);font-size:16px;line-height:1.6;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh}
+h1,h2,h3{font-weight:500;line-height:1.25;margin:0}
+p{margin:0}
+a{color:var(--teal-ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:3px}
+svg text{font-family:var(--font-num);fill:var(--ink-2)}
+.num{font-family:var(--font-num);font-variant-numeric:proportional-nums}
+.tnum{font-family:var(--font-num);font-variant-numeric:tabular-nums}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+
+/* ---------- header ---------- */
+.top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:22px 0 14px}
+.brand{display:flex;align-items:baseline;gap:12px}
+.brand h1{font-size:22px;font-weight:700;letter-spacing:.02em}
+.brand .sub{color:var(--muted);font-size:14px}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px;margin-left:auto}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block}
+.dot.stale{background:var(--sun)}
+.dot.off{background:var(--muted)}
+.dot.busy{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.tools{display:flex;gap:6px}
+.btn{border:1px solid var(--hair);background:transparent;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px;line-height:1.3;color:var(--ink-2);display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--ink-2);color:var(--ink)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.primary:hover{background:var(--teal-ink);border-color:var(--teal-ink)}
+.btn svg{width:16px;height:16px}
+
+/* ---------- warnings ---------- */
+.warn{display:none;border-left:3px solid var(--sun);padding:10px 14px;margin:6px 0 10px;background:var(--surface-2);font-size:15px}
+.warn.show{display:block}
+
+/* ---------- hero ---------- */
+.hero{padding:10px 0 8px;border-top:1px solid var(--hair)}
+.hero-head{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.hero-temp{display:flex;align-items:flex-start;gap:14px}
+.hero-temp .big{font-family:var(--font-num);font-weight:500;font-size:clamp(64px,9vw,108px);line-height:.9;letter-spacing:-.03em;font-variation-settings:"opsz" 96}
+.hero-temp .big sup{font-size:.36em;vertical-align:top;line-height:1;margin-left:2px;font-weight:400;position:relative;top:.22em}
+.hero-cond{display:flex;flex-direction:column;justify-content:flex-end;gap:2px;padding-bottom:6px}
+.hero-cond .cond{font-size:22px;font-weight:500;display:flex;align-items:center;gap:8px}
+.hero-cond .cond svg{width:30px;height:30px}
+.hero-cond .feel{color:var(--ink-2);font-size:15px}
+.hero-meta{margin-left:auto;color:var(--muted);font-size:14px;padding-bottom:10px;text-align:right}
+.hero-meta strong{color:var(--ink);font-weight:500}
+.place select{appearance:none;-webkit-appearance:none;background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%237C8E8C' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E") no-repeat right center/14px;border:0;border-bottom:1px dashed var(--hair);padding:0 18px 2px 0;font:inherit;font-size:16px;font-weight:500;color:var(--ink);cursor:pointer}
+.horizon{position:relative;margin-top:4px}
+.horizon svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.horizon .tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);padding:8px 10px;border-radius:var(--radius);font-size:13px;line-height:1.45;min-width:150px;opacity:0;transform:translate(-50%,0);transition:opacity .12s;z-index:2;white-space:nowrap}
+.horizon .tip.on{opacity:1}
+.horizon .tip b{font-family:var(--font-num);font-weight:600;font-size:15px}
+.horizon .tip small{opacity:.75}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:2px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.legend i.bar{height:10px;width:8px}
+
+/* ---------- sections ---------- */
+.section{padding:34px 0 8px;border-top:1px solid var(--hair);margin-top:26px}
+.section h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.section .lead{color:var(--muted);font-size:14px;margin-bottom:18px;max-width:60ch}
+.cols{display:grid;grid-template-columns:1.25fr .75fr;gap:40px}
+@media (max-width:860px){.cols{grid-template-columns:1fr;gap:28px}}
+
+/* now details */
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 24px}
+.fact .k{color:var(--muted);font-size:13px}
+.fact .v{font-family:var(--font-num);font-size:28px;font-weight:500;line-height:1.15;letter-spacing:-.01em}
+.fact .v small{font-size:14px;color:var(--ink-2);font-weight:400;margin-left:3px;font-family:var(--font-tc)}
+.fact .n{color:var(--ink-2);font-size:13px}
+
+/* 3d map */
+.seg{display:inline-flex;border:1px solid var(--hair);border-radius:999px;padding:3px;gap:2px;margin-bottom:10px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:5px 14px;font-size:14px;color:var(--ink-2);cursor:pointer;line-height:1.3}
+.seg button[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.seg button:hover:not([aria-selected="true"]){color:var(--ink)}
+.map3d{position:relative;border-radius:12px;background:var(--ground);overflow:hidden;height:clamp(360px,52vw,560px)}
+.map3d canvas{width:100%;height:100%;display:block;cursor:grab;touch-action:none;outline-offset:-3px}
+.map3d canvas.drag{cursor:grabbing}
+.map3d .tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);padding:8px 10px;border-radius:var(--radius);font-size:13px;line-height:1.45;opacity:0;transition:opacity .12s;z-index:2;white-space:nowrap}
+.map3d .tip.on{opacity:1}
+.map3d .tip b{font-family:var(--font-num);font-weight:600;font-size:15px}
+.map3d .tip small{opacity:.75}
+.map-ctl{position:absolute;right:10px;bottom:10px;display:flex;gap:4px}
+.map-ctl button{border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);border-radius:6px;min-width:32px;height:32px;padding:0 10px;font-size:14px;cursor:pointer;font-family:var(--font-num)}
+.map-ctl button:hover{color:var(--ink);border-color:var(--ink-2)}
+.ramp{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin-top:10px;flex-wrap:wrap}
+.ramp .steps{display:flex}
+.ramp .steps i{width:22px;height:10px;display:block}
+.ramp .rainkey{display:inline-flex;align-items:center;gap:5px;margin-left:8px}
+.ramp .rainkey i{width:2px;height:10px;background:var(--rain);display:inline-block;transform:skewX(-15deg)}
+.map-note{color:var(--muted);font-size:12px;margin-top:8px}
+
+/* week */
+.week{display:grid;grid-template-columns:auto auto minmax(90px,1fr) minmax(220px,2fr);gap:0 18px;align-items:center;font-size:15px}
+.week>div{padding:10px 0;border-bottom:1px solid var(--hair-2);min-height:44px;display:flex;align-items:center;gap:8px}
+.week .d{font-weight:500;white-space:nowrap}
+.week .d small{color:var(--muted);font-weight:400;margin-left:6px;font-family:var(--font-num)}
+.week .c svg{width:26px;height:26px;flex:none}
+.week .c span{color:var(--ink-2);font-size:14px}
+.week .p{gap:10px}
+.week .p .bar{flex:1;height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;max-width:120px}
+.week .p .bar i{display:block;height:100%;background:var(--rain);border-radius:3px}
+.week .p b{font-family:var(--font-num);font-weight:500;min-width:3ch;text-align:right}
+.week .t{height:44px;padding:0}
+.week .t .track{position:relative;height:100%;margin:0 38px;flex:1}
+.week .t .rng{position:absolute;height:6px;top:50%;margin-top:-3px;border-radius:3px;background:var(--clay)}
+.week .t .lo,.week .t .hi{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--font-num);font-size:14px;font-weight:500}
+.week .t .lo{color:var(--ink-2)}
+.week .t .hi{color:var(--ink)}
+@media (max-width:640px){
+  .week{grid-template-columns:auto auto 1fr}
+  .week .t{grid-column:1/-1;height:30px;border-bottom:1px solid var(--hair-2);margin-top:-10px;padding:0}
+  .week .d,.week .c,.week .p{border-bottom:0}
+}
+
+/* air + sun */
+.air-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.air-head .aqi{font-family:var(--font-num);font-size:56px;font-weight:500;line-height:1;letter-spacing:-.02em}
+.air-head .cat{display:inline-flex;align-items:center;gap:8px;font-size:17px;font-weight:500}
+.air-head .cat i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.meter{position:relative;height:10px;border-radius:5px;overflow:hidden;display:flex;margin:14px 0 6px;max-width:520px}
+.meter i{display:block;height:100%;opacity:.28}
+.meter i.on{opacity:1}
+.meter-labels{display:flex;justify-content:space-between;max-width:520px;color:var(--muted);font-size:12px;font-family:var(--font-num)}
+.pollut{display:grid;grid-template-columns:repeat(4,auto);gap:14px 28px;margin-top:18px;font-size:14px;justify-content:start;white-space:nowrap}
+@media (max-width:480px){.pollut{grid-template-columns:repeat(2,auto)}}
+.pollut .k{color:var(--muted);font-size:12px}
+.pollut .v{font-family:var(--font-num);font-size:20px;font-weight:500}
+.pollut .v small{font-size:12px;color:var(--muted);font-family:var(--font-tc);margin-left:2px}
+.spark{margin-top:16px;max-width:520px}
+.spark svg{width:100%;height:auto;display:block}
+.air-note{color:var(--muted);font-size:13px;margin-top:10px;max-width:60ch}
+.sunarc svg{width:100%;height:auto;display:block;max-width:420px}
+.sun-facts{display:grid;grid-template-columns:repeat(3,auto);gap:12px 28px;justify-content:start;margin-top:8px}
+.sun-facts .k{color:var(--muted);font-size:12px}
+.sun-facts .v{font-family:var(--font-num);font-size:22px;font-weight:500}
+
+/* history */
+.hist{position:relative}
+.hist svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.hist .tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);padding:8px 10px;border-radius:var(--radius);font-size:13px;line-height:1.45;opacity:0;transform:translate(-50%,0);transition:opacity .12s;white-space:nowrap;z-index:2}
+.hist .tip.on{opacity:1}
+.hist .tip b{font-family:var(--font-num);font-weight:600}
+
+/* cwa */
+.cwa-empty{color:var(--ink-2);font-size:15px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.periods{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:760px}
+@media (max-width:640px){.periods{grid-template-columns:1fr}}
+.period{border-top:2px solid var(--teal);padding-top:10px}
+.period .when{font-size:13px;color:var(--muted)}
+.period .wx{font-size:17px;font-weight:500;margin:4px 0}
+.period .rng{font-family:var(--font-num);font-size:26px;font-weight:500}
+.period .rng small{font-size:14px;color:var(--ink-2);font-family:var(--font-tc)}
+.period .pop{font-size:14px;color:var(--ink-2)}
+.cwa-err{color:var(--clay);font-size:14px;margin-top:8px}
+
+/* tables */
+details.tbl{margin-top:10px;font-size:13px;color:var(--muted)}
+details.tbl summary{cursor:pointer;width:max-content}
+details.tbl table{border-collapse:collapse;margin-top:8px;color:var(--ink-2);font-variant-numeric:tabular-nums;width:100%;max-width:720px}
+details.tbl th,details.tbl td{text-align:right;padding:4px 10px;border-bottom:1px solid var(--hair-2);font-weight:400}
+details.tbl th:first-child,details.tbl td:first-child{text-align:left}
+details.tbl thead th{color:var(--muted);font-weight:500}
+.tbl-wrap{overflow-x:auto}
+
+/* dialog */
+dialog{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:10px;padding:24px 26px;max-width:520px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(6,20,22,.45)}
+dialog h2{font-size:18px;font-weight:700;margin-bottom:6px}
+dialog p{font-size:14px;color:var(--ink-2)}
+dialog label{display:block;font-size:13px;color:var(--muted);margin:16px 0 6px}
+dialog input,dialog select{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--hair);border-radius:6px;background:var(--surface);color:var(--ink)}
+dialog .row{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+dialog .row .link{background:none;border:0;color:var(--muted);cursor:pointer;margin-right:auto;padding:6px 0}
+
+/* footer */
+footer{margin:48px 0 40px;color:var(--muted);font-size:13px;line-height:1.7;border-top:1px solid var(--hair);padding-top:16px}
+
+/* states */
+.loading main{opacity:.55;transition:opacity .2s}
+.error-box{display:none;border-left:3px solid var(--clay);padding:12px 14px;background:var(--surface-2);margin:12px 0;font-size:15px}
+.error-box.show{display:block}
+.error-box button{margin-left:10px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>桃園天氣</h1>
+      <span class="sub">桃園市十三區即時追蹤</span>
+    </div>
+    <div class="status" aria-live="polite">
+      <span class="dot off" id="dot"></span>
+      <span id="statusText">尚未更新</span>
+    </div>
+    <div class="tools">
+      <button class="btn" id="btnRefresh" type="button" title="重新整理資料">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/></svg>
+        重新整理
+      </button>
+      <button class="btn" id="btnTheme" type="button" title="切換深淺色">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 2.5v1.5M8 12v1.5M2.5 8H4M12 8h1.5M4.1 4.1l1 1M10.9 10.9l1 1M4.1 11.9l1-1M10.9 5.1l1-1"/><circle cx="8" cy="8" r="2.6"/></svg>
+        深淺色
+      </button>
+      <button class="btn" id="btnSettings" type="button" title="設定">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/><circle cx="6" cy="4.5" r="1.3" fill="var(--surface)"/><circle cx="10.5" cy="8" r="1.3" fill="var(--surface)"/><circle cx="5" cy="11.5" r="1.3" fill="var(--surface)"/></svg>
+        設定
+      </button>
+    </div>
+  </header>
+
+  <div class="warn" id="warnBox" role="alert"></div>
+  <div class="error-box" id="errBox" role="alert"></div>
+
+  <main>
+    <!-- ===== hero: now + 24h horizon ===== -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <h2 id="heroTitle" class="visually-hidden">現在與未來 24 小時</h2>
+      <div class="hero-head">
+        <div class="hero-temp">
+          <div class="big" id="bigTemp">--<sup>°</sup></div>
+          <div class="hero-cond">
+            <div class="cond" id="condNow"><span>載入中</span></div>
+            <div class="feel" id="feelNow">正在取得桃園的天氣</div>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <label class="place"><span class="visually-hidden">行政區</span><select id="placeSel" aria-label="切換行政區"></select></label>
+          <div id="heroSub">日出 --:-- · 日落 --:--</div>
+        </div>
+      </div>
+      <div class="horizon" id="horizon">
+        <svg id="hz" viewBox="0 0 1000 300" role="img" aria-label="未來 24 小時氣溫與降雨機率圖" tabindex="0"></svg>
+        <div class="tip" id="hzTip"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--clay)"></i>氣溫</span>
+        <span><i class="bar" style="background:var(--rain)"></i>降雨機率</span>
+        <span><i style="background:linear-gradient(90deg,var(--sky-night),var(--sky-dusk),var(--sky-day))"></i>天色</span>
+        <span>滑過或用方向鍵查看每小時</span>
+      </div>
+      <details class="tbl"><summary>以表格檢視逐時資料</summary><div class="tbl-wrap" id="hzTable"></div></details>
+    </section>
+
+    <!-- ===== districts + now facts ===== -->
+    <section class="section" aria-labelledby="mapTitle">
+      <div class="cols">
+        <div>
+          <h2 id="mapTitle">十三區現在</h2>
+          <p class="lead">立體俯視圖：高度是各區海拔，顏色是你選的指標。拖曳可以旋轉，點一個區，整頁預報就切換到那裡。</p>
+          <div class="seg" role="tablist" aria-label="地圖顯示的指標" id="mapSeg">
+            <button type="button" role="tab" aria-selected="true" data-metric="temp">氣溫</button>
+            <button type="button" role="tab" aria-selected="false" data-metric="rain">降雨</button>
+            <button type="button" role="tab" aria-selected="false" data-metric="hum">濕度</button>
+            <button type="button" role="tab" aria-selected="false" data-metric="wind">風速</button>
+          </div>
+          <div class="map3d" id="map3d">
+            <canvas id="mapCanvas" tabindex="0" role="img" aria-label="桃園市十三區立體地圖，方向鍵切換區域，Enter 選取"></canvas>
+            <div class="tip" id="mapTip"></div>
+            <div class="map-ctl">
+              <button type="button" id="mapTop" title="正上方俯視">俯視</button>
+              <button type="button" id="mapReset" title="回到預設視角">重設</button>
+              <button type="button" id="mapZoomIn" title="放大" aria-label="放大">+</button>
+              <button type="button" id="mapZoomOut" title="縮小" aria-label="縮小">−</button>
+            </div>
+          </div>
+          <div class="ramp" id="mapRamp"></div>
+          <p class="map-note">邊界取自內政部鄉鎮界資料（g0v 整理版）。拖曳旋轉、上下拖曳改變俯角，滾輪或雙指縮放。</p>
+          <details class="tbl"><summary>以表格檢視各區</summary><div class="tbl-wrap" id="mapTable"></div></details>
+        </div>
+        <div>
+          <h2>現在的細節</h2>
+          <p class="lead" id="factsPlace">桃園區</p>
+          <div class="facts" id="facts"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== week ===== -->
+    <section class="section" aria-labelledby="weekTitle">
+      <h2 id="weekTitle">未來七天</h2>
+      <p class="lead">橫條是當天的最低到最高氣溫，藍色是最高降雨機率。</p>
+      <div class="week" id="week"></div>
+      <details class="tbl"><summary>以表格檢視七天</summary><div class="tbl-wrap" id="weekTable"></div></details>
+    </section>
+
+    <!-- ===== air + sun ===== -->
+    <section class="section" aria-labelledby="airTitle">
+      <div class="cols">
+        <div>
+          <h2 id="airTitle">空氣品質</h2>
+          <p class="lead">AQI 採用與台灣相同的六級分類。數值愈低愈好。</p>
+          <div class="air-head"><span class="aqi" id="aqiVal">--</span><span class="cat" id="aqiCat"><i></i><span>載入中</span></span></div>
+          <div class="meter" id="meter" aria-hidden="true"></div>
+          <div class="meter-labels"><span>0</span><span>50</span><span>100</span><span>150</span><span>200</span><span>300</span><span>500</span></div>
+          <div class="pollut" id="pollut"></div>
+          <div class="spark" id="spark"></div>
+          <p class="air-note" id="airAdvice"></p>
+        </div>
+        <div>
+          <h2>太陽</h2>
+          <p class="lead" id="sunLead">今天的日照</p>
+          <div class="sunarc" id="sunarc"></div>
+          <div class="sun-facts" id="sunFacts"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CWA official ===== -->
+    <section class="section" aria-labelledby="cwaTitle">
+      <h2 id="cwaTitle">氣象署官方預報</h2>
+      <p class="lead">中央氣象署提供桃園市 36 小時預報與特報。需要免費的授權碼，設定一次即可。</p>
+      <div id="cwaBody" class="cwa-empty"><span>尚未設定授權碼。</span><button class="btn" type="button" id="btnCwaSetup">設定授權碼</button></div>
+    </section>
+
+    <!-- ===== history ===== -->
+    <section class="section" aria-labelledby="histTitle">
+      <h2 id="histTitle">最近三十天</h2>
+      <p class="lead">上方是每日最低到最高氣溫，下方是每日雨量。可看出一波鋒面或颱風前後的變化。</p>
+      <div class="hist" id="hist">
+        <svg id="histSvg" viewBox="0 0 1000 300" role="img" aria-label="最近三十天每日氣溫範圍與雨量" tabindex="0"></svg>
+        <div class="tip" id="histTip"></div>
+      </div>
+      <div class="legend">
+        <span><i class="bar" style="background:var(--clay);width:6px"></i>最低到最高氣溫</span>
+        <span><i class="bar" style="background:var(--rain)"></i>日雨量</span>
+      </div>
+      <details class="tbl"><summary>以表格檢視三十天</summary><div class="tbl-wrap" id="histTable"></div></details>
+    </section>
+  </main>
+
+  <footer>
+    <div>預報與觀測資料：<a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a>（免費、免金鑰，每 10 分鐘自動更新）。官方預報與特報：<a href="https://opendata.cwa.gov.tw/" rel="noopener">中央氣象署開放資料平臺</a>（需授權碼）。</div>
+    <div id="footNote">十三區座標為各區公所附近，山區與海邊的體感會與模式數值有差。</div>
+  </footer>
+</div>
+
+<!-- settings dialog -->
+<dialog id="dlg">
+  <h2>設定</h2>
+  <p>資料會存在這個瀏覽器裡，不會傳到別的地方。</p>
+  <label for="selDistrict">預設行政區</label>
+  <select id="selDistrict"></select>
+  <label for="cwaKey">中央氣象署授權碼</label>
+  <input id="cwaKey" type="text" autocomplete="off" spellcheck="false" placeholder="CWA-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX">
+  <p style="margin-top:6px;font-size:13px">到 <a href="https://opendata.cwa.gov.tw/user/authkey" rel="noopener" target="_blank">氣象署開放資料平臺</a> 免費註冊後，在「取得授權碼」頁面複製。</p>
+  <div class="row">
+    <button class="link" type="button" id="dlgClear">清除快取與設定</button>
+    <button class="btn" type="button" id="dlgCancel">取消</button>
+    <button class="btn primary" type="button" id="dlgSave">儲存</button>
+  </div>
+</dialog>
+
+<script>
+/* ===================== data ===================== */
+const DISTRICTS = [
+  {id:'taoyuan', name:'桃園區', lat:24.9936, lon:121.3010},
+  {id:'zhongli', name:'中壢區', lat:24.9575, lon:121.2250},
+  {id:'pingzhen', name:'平鎮區', lat:24.9456, lon:121.2180},
+  {id:'bade',    name:'八德區', lat:24.9285, lon:121.2848},
+  {id:'yangmei', name:'楊梅區', lat:24.9126, lon:121.1458},
+  {id:'luzhu',   name:'蘆竹區', lat:25.0450, lon:121.2920},
+  {id:'daxi',    name:'大溪區', lat:24.8806, lon:121.2868},
+  {id:'longtan', name:'龍潭區', lat:24.8636, lon:121.2160},
+  {id:'guishan', name:'龜山區', lat:25.0225, lon:121.3380},
+  {id:'dayuan',  name:'大園區', lat:25.0644, lon:121.2050},
+  {id:'guanyin', name:'觀音區', lat:25.0330, lon:121.0780},
+  {id:'xinwu',   name:'新屋區', lat:24.9727, lon:121.1040},
+  {id:'fuxing',  name:'復興區', lat:24.7200, lon:121.3500},
+];
+const TZ = 'Asia/Taipei';
+const STORE = 'twx:v1';
+const REFRESH_MS = 10 * 60 * 1000;
+
+const WMO = {
+  0:['晴朗','sun'],1:['大致晴朗','sun'],2:['多雲時晴','partly'],3:['陰天','cloud'],
+  45:['有霧','fog'],48:['濃霧','fog'],
+  51:['毛毛雨','drizzle'],53:['毛毛雨','drizzle'],55:['較大毛毛雨','drizzle'],56:['凍毛毛雨','drizzle'],57:['凍毛毛雨','drizzle'],
+  61:['小雨','rain'],63:['中雨','rain'],65:['大雨','rain'],66:['凍雨','rain'],67:['凍雨','rain'],
+  71:['小雪','snow'],73:['中雪','snow'],75:['大雪','snow'],77:['雪粒','snow'],
+  80:['短暫陣雨','rain'],81:['陣雨','rain'],82:['強陣雨','rain'],85:['陣雪','snow'],86:['陣雪','snow'],
+  95:['雷雨','thunder'],96:['雷雨帶冰雹','thunder'],99:['強雷雨帶冰雹','thunder'],
+};
+const wx = (code, isDay=true) => {
+  const w = WMO[code] || ['未知','cloud'];
+  let kind = w[1];
+  if (!isDay && kind === 'sun') kind = 'moon';
+  if (!isDay && kind === 'partly') kind = 'partlyNight';
+  return {text:w[0], kind};
+};
+
+/* icons: simple line glyphs, currentColor */
+function icon(kind, size=24){
+  const S = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"`;
+  const sun = `<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>`;
+  const moon = `<path d="M15.5 3.5a8 8 0 1 0 5 13.5A9 9 0 0 1 15.5 3.5z"/>`;
+  const cloud = `<path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 18z"/>`;
+  const smallCloud = `<path d="M9 20h9a3.5 3.5 0 0 0 .4-7 5 5 0 0 0-9.6 1.2A2.9 2.9 0 0 0 9 20z"/>`;
+  switch(kind){
+    case 'sun': return `<svg ${S} style="color:var(--sun)">${sun}</svg>`;
+    case 'moon': return `<svg ${S}>${moon}</svg>`;
+    case 'partly': return `<svg ${S}><g style="color:var(--sun)"><circle cx="8" cy="8" r="3"/><path d="M8 2v1.5M2 8h1.5M3.8 3.8l1 1M12.2 3.8l-1 1"/></g>${smallCloud}</svg>`;
+    case 'partlyNight': return `<svg ${S}><path d="M9 2.5a4.5 4.5 0 0 0 4.5 6.5" />${smallCloud}</svg>`;
+    case 'cloud': return `<svg ${S}>${cloud}</svg>`;
+    case 'fog': return `<svg ${S}><path d="M4 10h16M6 14h12M8 18h8"/></svg>`;
+    case 'drizzle': return `<svg ${S}><path d="M7 15h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 15z"/><g style="color:var(--rain)"><path d="M9 18v1M13 18v1M11 20.5v1"/></g></svg>`;
+    case 'rain': return `<svg ${S}><path d="M7 15h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 15z"/><g style="color:var(--rain)"><path d="M9 17.5l-1 3M13 17.5l-1 3M17 17.5l-1 3"/></g></svg>`;
+    case 'snow': return `<svg ${S}><path d="M7 15h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 15z"/><path d="M9 18.5h.01M13 18.5h.01M11 21h.01M15 21h.01"/></svg>`;
+    case 'thunder': return `<svg ${S}><path d="M7 14h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 14z"/><path d="M12.5 14l-2.5 4h3l-2 4" style="color:var(--sun)"/></svg>`;
+  }
+  return `<svg ${S}>${cloud}</svg>`;
+}
+
+/* ===================== helpers ===================== */
+const $ = (s) => document.querySelector(s);
+const fmt1 = (v) => (v == null || isNaN(v)) ? '--' : Math.round(v * 10) / 10;
+const fmt0 = (v) => (v == null || isNaN(v)) ? '--' : Math.round(v);
+const pad = (n) => String(n).padStart(2, '0');
+const hhmm = (iso) => iso ? iso.slice(11, 16) : '--:--';
+const WEEK = ['日','一','二','三','四','五','六'];
+const dateOf = (iso) => new Date(iso.slice(0,10) + 'T00:00:00+08:00');
+const weekday = (iso) => '週' + WEEK[dateOf(iso).getDay()];
+const md = (iso) => `${parseInt(iso.slice(5,7))}/${parseInt(iso.slice(8,10))}`;
+const compass = (deg) => ['北','東北','東','東南','南','西南','西','西北'][Math.round(((deg % 360) + 360) % 360 / 45) % 8];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* Taipei "now" as an ISO-like string (data arrays use this format) */
+function nowTaipeiISO(){
+  const p = new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', hour12:false}).formatToParts(new Date());
+  const g = (t) => p.find(x => x.type === t).value;
+  return `${g('year')}-${g('month')}-${g('day')}T${g('hour') === '24' ? '00' : g('hour')}:${g('minute')}`;
+}
+
+function hexToRgb(h){ h = h.replace('#',''); return [0,2,4].map(i => parseInt(h.slice(i,i+2),16)); }
+function mix(c1, c2, t){ const a = hexToRgb(c1), b = hexToRgb(c2); return `rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],t))).join(',')})`; }
+function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function luminance(hex){ const [r,g,b] = hexToRgb(hex).map(v => { v/=255; return v <= .03928 ? v/12.92 : ((v+.055)/1.055)**2.4; }); return .2126*r+.7152*g+.0722*b; }
+
+/* Catmull-Rom to cubic bezier path */
+function smoothPath(pts){
+  if (pts.length < 2) return '';
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++){
+    const p0 = pts[i-1] || pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2] || p2;
+    const c1x = p1[0] + (p2[0]-p0[0])/6, c1y = p1[1] + (p2[1]-p0[1])/6;
+    const c2x = p2[0] - (p3[0]-p1[0])/6, c2y = p2[1] - (p3[1]-p1[1])/6;
+    d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+function tableHTML(head, rows){
+  return `<table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+/* ===================== state ===================== */
+const state = {
+  district: DISTRICTS[0],
+  data: null,          // {main, aq, hist, districts, fetchedAt}
+  cwaKey: '',
+  cwa: null,
+  timer: null,
+  tickTimer: null,
+};
+
+function loadStore(){
+  try {
+    const raw = localStorage.getItem(STORE);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (s.districtId) state.district = DISTRICTS.find(d => d.id === s.districtId) || DISTRICTS[0];
+    if (s.cwaKey) state.cwaKey = s.cwaKey;
+    if (s.theme) document.documentElement.dataset.theme = s.theme;
+    if (s.cache && s.cache.main) state.data = s.cache;
+  } catch (e) { /* ignore */ }
+}
+function saveStore(){
+  try {
+    const theme = document.documentElement.dataset.theme || '';
+    localStorage.setItem(STORE, JSON.stringify({districtId: state.district.id, cwaKey: state.cwaKey, theme, cache: state.data}));
+  } catch (e) { /* ignore */ }
+}
+
+/* ===================== fetching ===================== */
+async function getJSON(url){
+  const r = await fetch(url, {cache: 'no-store'});
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+function urlMain(d){
+  const q = new URLSearchParams({
+    latitude: d.lat, longitude: d.lon, timezone: TZ, past_days: 1, forecast_days: 7,
+    current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,cloud_cover,pressure_msl,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index',
+    hourly: 'temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,relative_humidity_2m,cloud_cover,uv_index',
+    daily: 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,sunrise,sunset,uv_index_max,wind_speed_10m_max',
+  });
+  return 'https://api.open-meteo.com/v1/forecast?' + q;
+}
+function urlAQ(d){
+  const q = new URLSearchParams({latitude: d.lat, longitude: d.lon, timezone: TZ, forecast_days: 2, past_days: 1,
+    current: 'us_aqi,pm2_5,pm10,ozone,nitrogen_dioxide', hourly: 'us_aqi,pm2_5'});
+  return 'https://air-quality-api.open-meteo.com/v1/air-quality?' + q;
+}
+function urlHist(d){
+  const q = new URLSearchParams({latitude: d.lat, longitude: d.lon, timezone: TZ, past_days: 30, forecast_days: 1,
+    daily: 'temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code'});
+  return 'https://api.open-meteo.com/v1/forecast?' + q;
+}
+function urlDistricts(){
+  const q = new URLSearchParams({latitude: DISTRICTS.map(d=>d.lat).join(','), longitude: DISTRICTS.map(d=>d.lon).join(','), timezone: TZ,
+    current: 'temperature_2m,weather_code,precipitation,relative_humidity_2m,wind_speed_10m,is_day'});
+  return 'https://api.open-meteo.com/v1/forecast?' + q;
+}
+
+async function refresh(){
+  const d = state.district;
+  document.body.classList.add('loading');
+  setStatus('busy', '更新中');
+  try {
+    const [main, aq, hist, districts] = await Promise.all([getJSON(urlMain(d)), getJSON(urlAQ(d)), getJSON(urlHist(d)), getJSON(urlDistricts())]);
+    state.data = {main, aq, hist, districts, fetchedAt: Date.now(), districtId: d.id};
+    saveStore();
+    $('#errBox').classList.remove('show');
+    render();
+  } catch (e) {
+    console.error(e);
+    const box = $('#errBox');
+    box.innerHTML = `無法取得天氣資料（${esc(e.message)}）。請檢查網路連線，或稍後再試。<button class="btn" type="button" onclick="refresh()">再試一次</button>`;
+    box.classList.add('show');
+    if (state.data) render(); else setStatus('off', '無資料');
+  } finally {
+    document.body.classList.remove('loading');
+  }
+  if (state.cwaKey) refreshCWA();
+}
+
+function setStatus(kind, text){
+  $('#dot').className = 'dot ' + kind;
+  $('#statusText').textContent = text;
+}
+function tickStatus(){
+  if (!state.data) return;
+  const age = Date.now() - state.data.fetchedAt;
+  const t = new Date(state.data.fetchedAt);
+  const stamp = `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  const min = Math.floor(age / 60000);
+  const rel = min < 1 ? '剛剛' : min < 60 ? `${min} 分鐘前` : `${Math.floor(min/60)} 小時前`;
+  setStatus(age > REFRESH_MS * 2 ? 'stale' : '', `更新於 ${stamp} · ${rel}`);
+}
+
+/* ===================== render ===================== */
+function render(){
+  const D = state.data;
+  if (!D || !D.main) return;
+  // if cached data belongs to a different district, still render but mark
+  renderHero(D.main);
+  renderHorizon(D.main);
+  renderFacts(D.main);
+  renderMap(D.districts);
+  renderWeek(D.main);
+  renderAir(D.aq);
+  renderSun(D.main);
+  renderHistory(D.hist);
+  tickStatus();
+  $('#placeSel').value = state.district.id;
+  $('#factsPlace').textContent = state.district.name + '，' + (D.main.elevation != null ? `海拔約 ${fmt0(D.main.elevation)} 公尺` : '');
+}
+
+function renderHero(m){
+  const c = m.current;
+  const w = wx(c.weather_code, c.is_day === 1);
+  $('#bigTemp').innerHTML = `${fmt0(c.temperature_2m)}<sup>°</sup>`;
+  $('#condNow').innerHTML = `${icon(w.kind, 30)}<span>${w.text}</span>`;
+  const diff = c.apparent_temperature - c.temperature_2m;
+  let feel = `體感 ${fmt0(c.apparent_temperature)}°`;
+  if (diff >= 4) feel += '，濕熱悶';
+  else if (diff <= -3) feel += '，風吹起來更冷';
+  if (c.precipitation > 0) feel += ` · 這小時已降 ${fmt1(c.precipitation)} mm`;
+  $('#feelNow').textContent = feel;
+  const today = m.daily.time.indexOf(nowTaipeiISO().slice(0,10));
+  const i = today >= 0 ? today : 1;
+  $('#heroSub').innerHTML = `日出 <strong class="tnum">${hhmm(m.daily.sunrise[i])}</strong> · 日落 <strong class="tnum">${hhmm(m.daily.sunset[i])}</strong>`;
+}
+
+/* ---- 24h horizon chart ---- */
+let hzModel = null;
+function renderHorizon(m){
+  const H = m.hourly, HT = 300;
+  const cw = $('#horizon').clientWidth || 1000;
+  const narrow = cw < 640;
+  const W = Math.max(cw, 320);
+  $('#hz').setAttribute('viewBox', `0 0 ${W} ${HT}`);
+  const nowISO = nowTaipeiISO();
+  const curHour = nowISO.slice(0,13) + ':00';
+  let idx = H.time.indexOf(curHour);
+  if (idx < 0) idx = H.time.findIndex(t => t > nowISO) - 1;
+  if (idx < 0) idx = 0;
+  const back = narrow ? 2 : 4, N = narrow ? 15 : 25;
+  const start = clamp(idx - back, 0, H.time.length - N);
+  const pts = [];
+  for (let k = 0; k < N; k++){
+    const i = start + k;
+    if (i >= H.time.length) break;
+    pts.push({
+      t: H.time[i], temp: H.temperature_2m[i], feel: H.apparent_temperature[i], pop: H.precipitation_probability[i] ?? 0,
+      mm: H.precipitation[i] ?? 0, code: H.weather_code[i], wind: H.wind_speed_10m[i], rh: H.relative_humidity_2m[i], cloud: H.cloud_cover[i] ?? 0, uv: H.uv_index[i] ?? 0,
+    });
+  }
+  // sunrise / sunset for sky colouring
+  const sunByDay = {};
+  m.daily.time.forEach((d, i) => sunByDay[d] = {rise: m.daily.sunrise[i], set: m.daily.sunset[i]});
+  const minutesOf = (iso) => parseInt(iso.slice(11,13))*60 + parseInt(iso.slice(14,16));
+  const dayFactor = (iso) => {           // 0 night .. 1 day, plus dusk weight
+    const s = sunByDay[iso.slice(0,10)];
+    if (!s) return {day:1, dusk:0};
+    const t = minutesOf(iso), r = minutesOf(s.rise), st = minutesOf(s.set);
+    const near = Math.min(Math.abs(t - r), Math.abs(t - st));
+    const dusk = clamp(1 - near / 70, 0, 1);
+    let day;
+    if (t < r - 50 || t > st + 50) day = 0;
+    else if (t > r + 50 && t < st - 50) day = 1;
+    else if (t <= r + 50) day = clamp((t - (r - 50)) / 100, 0, 1);
+    else day = clamp(((st + 50) - t) / 100, 0, 1);
+    return {day, dusk, isDay: t >= r && t <= st};
+  };
+  pts.forEach(p => { const f = dayFactor(p.t); p.day = f.day; p.dusk = f.dusk; p.isDay = f.isDay; });
+
+  // layout
+  const padL = 40, padR = narrow ? 22 : 40;
+  const x = (k) => padL + k * (W - padL - padR) / (N - 1);
+  const skyY = 8, skyH = 22;
+  const tTop = 62, tBot = 178;         // temperature panel
+  const rTop = 196, rBot = 262;        // rain panel
+  const axisY = 284;
+  const temps = pts.map(p => p.temp);
+  let tMin = Math.min(...temps), tMax = Math.max(...temps);
+  if (tMax - tMin < 4){ const mid = (tMax + tMin)/2; tMin = mid - 2; tMax = mid + 2; }
+  const ty = (v) => tBot - (v - tMin) / (tMax - tMin) * (tBot - tTop);
+  const ry = (v) => rBot - clamp(v,0,100) / 100 * (rBot - rTop);
+
+  const night = cssVar('--sky-night'), day = cssVar('--sky-day'), overcast = cssVar('--sky-overcast'), dusk = cssVar('--sky-dusk');
+  const rgbOf = (c) => c.startsWith('#') ? c : c;
+  const skyColor = (p) => {
+    const dayCol = mix(day, overcast, clamp(p.cloud/100, 0, 1) * 0.85);
+    // mix night -> day
+    const base = mixRgb(night, dayCol, p.day);
+    return mixRgb(base, dusk, p.dusk * 0.75);
+  };
+  // gradient stops
+  const stops = pts.map((p, k) => `<stop offset="${(k/(N-1)*100).toFixed(1)}%" stop-color="${skyColor(p)}"/>`).join('');
+
+  const nowK = idx - start;
+  const nowX = x(nowK) + (parseInt(nowISO.slice(14,16)) / 60) * (x(1) - x(0));
+
+  let svg = `<defs><linearGradient id="skyG" x1="0" x2="1" y1="0" y2="0">${stops}</linearGradient>
+    <linearGradient id="tWash" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${cssVar('--clay')}" stop-opacity=".16"/><stop offset="1" stop-color="${cssVar('--clay')}" stop-opacity="0"/></linearGradient></defs>`;
+  // sky band
+  svg += `<rect x="${padL}" y="${skyY}" width="${W-padL-padR}" height="${skyH}" rx="11" fill="url(#skyG)"/>`;
+  // sunrise / sunset ticks on sky band
+  pts.forEach((p, k) => {
+    if (k === N-1) return;
+    const s = sunByDay[p.t.slice(0,10)];
+    if (!s) return;
+    ['rise','set'].forEach(key => {
+      const iso = s[key];
+      if (iso.slice(0,13) === p.t.slice(0,13)){
+        const xx = x(k) + (parseInt(iso.slice(14,16))/60) * (x(1)-x(0));
+        svg += `<line x1="${xx.toFixed(1)}" y1="${skyY-3}" x2="${xx.toFixed(1)}" y2="${skyY+skyH+3}" stroke="${cssVar('--ink-2')}" stroke-width="1"/>
+                <text x="${xx.toFixed(1)}" y="${skyY+skyH+16}" text-anchor="middle" font-size="11" fill="${cssVar('--muted')}">${key==='rise'?'日出':'日落'} ${hhmm(iso)}</text>`;
+      }
+    });
+  });
+  // sun/moon marker on sky band at now
+  const pNow = pts[nowK] || pts[0];
+  const markerCol = pNow.isDay ? cssVar('--sun') : cssVar('--surface');
+  svg += `<circle cx="${nowX.toFixed(1)}" cy="${skyY+skyH/2}" r="6" fill="${markerCol}" stroke="${cssVar('--surface')}" stroke-width="2"/>`;
+
+  // temperature panel: gridlines (hairline) at min / max
+  svg += `<line x1="${padL}" x2="${W-padR}" y1="${tBot}" y2="${tBot}" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  const line = pts.map((p,k) => [x(k), ty(p.temp)]);
+  const path = smoothPath(line);
+  svg += `<path d="${path} L${x(N-1).toFixed(1)},${tBot} L${x(0)},${tBot} Z" fill="url(#tWash)"/>`;
+  // past segment lighter
+  svg += `<path d="${path}" fill="none" stroke="${cssVar('--clay')}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  svg += `<rect x="${padL}" y="${tTop-10}" width="${Math.max(0,nowX-padL).toFixed(1)}" height="${tBot-tTop+10}" fill="${cssVar('--surface')}" opacity=".45"/>`;
+  // extremes labels (only future part)
+  const fut = pts.slice(nowK);
+  const iMax = pts.indexOf(fut.reduce((a,b)=> b.temp > a.temp ? b : a));
+  const iMin = pts.indexOf(fut.reduce((a,b)=> b.temp < a.temp ? b : a));
+  const lab = (i, above) => `<text x="${x(i).toFixed(1)}" y="${(ty(pts[i].temp) + (above ? -10 : 18)).toFixed(1)}" text-anchor="middle" font-size="13" font-weight="600" fill="${cssVar('--ink')}">${fmt0(pts[i].temp)}°</text>`;
+  if (iMax !== nowK) svg += lab(iMax, true);
+  if (iMin !== nowK && iMin !== iMax) svg += lab(iMin, false);
+  // now marker
+  svg += `<line x1="${nowX.toFixed(1)}" x2="${nowX.toFixed(1)}" y1="${tTop-14}" y2="${axisY-6}" stroke="${cssVar('--ink')}" stroke-width="1"/>`;
+  const nowYT = ty(pNow.temp);
+  svg += `<circle cx="${nowX.toFixed(1)}" cy="${nowYT.toFixed(1)}" r="5" fill="${cssVar('--clay')}" stroke="${cssVar('--surface')}" stroke-width="2"/>`;
+  svg += `<text x="${(nowX + 9).toFixed(1)}" y="${(tTop - 2).toFixed(1)}" font-size="12" fill="${cssVar('--ink')}" font-weight="600">現在</text>`;
+
+  // rain panel
+  svg += `<line x1="${padL}" x2="${W-padR}" y1="${rBot}" y2="${rBot}" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  const slot = x(1) - x(0), bw = Math.min(18, slot - 4);
+  let popMax = -1, popMaxK = -1;
+  pts.forEach((p,k) => {
+    if (k === N-1) return;
+    const h = rBot - ry(p.pop);
+    if (h > 0) svg += `<rect x="${(x(k) - bw/2).toFixed(1)}" y="${ry(p.pop).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${cssVar('--rain')}" opacity="${k < nowK ? .45 : 1}"/>`;
+    if (k >= nowK && p.pop > popMax){ popMax = p.pop; popMaxK = k; }
+  });
+  if (popMaxK >= 0 && popMax > 0) svg += `<text x="${x(popMaxK).toFixed(1)}" y="${(ry(popMax) - 6).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="600" fill="${cssVar('--ink')}">${popMax}%</text>`;
+  svg += `<text x="${padL-8}" y="${rTop+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">100%</text><text x="${padL-8}" y="${rBot+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">0</text>`;
+  svg += `<text x="${padL-8}" y="${tTop+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">${fmt0(tMax)}°</text><text x="${padL-8}" y="${tBot+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">${fmt0(tMin)}°</text>`;
+
+  // x axis
+  pts.forEach((p,k) => {
+    const hr = parseInt(p.t.slice(11,13));
+    if (hr % (narrow ? 2 : 3) === 0){
+      const isMidnight = hr === 0;
+      svg += `<text x="${x(k).toFixed(1)}" y="${axisY+8}" text-anchor="middle" font-size="12" fill="${isMidnight ? cssVar('--ink') : cssVar('--muted')}" font-weight="${isMidnight?600:400}">${isMidnight ? md(p.t) : hr + '時'}</text>`;
+    }
+  });
+  // hover hit zones
+  svg += `<g id="hzHits">` + pts.map((p,k) => `<rect data-k="${k}" x="${(x(k) - slot/2).toFixed(1)}" y="0" width="${slot.toFixed(1)}" height="${HT}" fill="transparent"/>`).join('') + `</g>`;
+  svg += `<g id="hzCross" style="display:none"><line id="hzCrossLine" y1="${tTop-14}" y2="${axisY-6}" stroke="${cssVar('--ink-2')}" stroke-width="1"/><circle id="hzCrossDot" r="5" fill="${cssVar('--clay')}" stroke="${cssVar('--surface')}" stroke-width="2"/></g>`;
+
+  $('#hz').innerHTML = svg;
+  hzModel = {pts, x, ty, nowK, W, HT};
+  $('#hzTable').innerHTML = tableHTML(['時間','氣溫','體感','降雨機率','雨量','天氣','風速','濕度'],
+    pts.map(p => [`${md(p.t)} ${hhmm(p.t)}`, `${fmt1(p.temp)}°`, `${fmt1(p.feel)}°`, `${p.pop}%`, `${fmt1(p.mm)} mm`, wx(p.code, p.isDay).text, `${fmt0(p.wind)} km/h`, `${p.rh}%`]));
+  hzHover(-1);
+}
+function mixRgb(c1, c2, t){
+  const parse = (c) => c.startsWith('#') ? hexToRgb(c) : c.match(/\d+/g).map(Number);
+  const a = parse(c1), b = parse(c2);
+  return `rgb(${a.map((v,i)=>Math.round(lerp(v,b[i],t))).join(',')})`;
+}
+let hzK = -1;
+function hzHover(k){
+  const M = hzModel; if (!M) return;
+  const tip = $('#hzTip'), cross = $('#hzCross');
+  if (k < 0 || k >= M.pts.length){ tip.classList.remove('on'); cross.style.display = 'none'; hzK = -1; return; }
+  hzK = k;
+  const p = M.pts[k];
+  const svg = $('#hz'); const rect = svg.getBoundingClientRect();
+  const sx = rect.width / M.W;
+  const px = M.x(k) * sx;
+  cross.style.display = '';
+  $('#hzCrossLine').setAttribute('x1', M.x(k)); $('#hzCrossLine').setAttribute('x2', M.x(k));
+  $('#hzCrossDot').setAttribute('cx', M.x(k)); $('#hzCrossDot').setAttribute('cy', M.ty(p.temp));
+  const w = wx(p.code, p.isDay);
+  tip.innerHTML = `<div><small>${md(p.t)} ${hhmm(p.t)}${k < M.nowK ? '（已過）' : ''}</small></div><div><b>${fmt1(p.temp)}°</b> ${w.text}　體感 ${fmt0(p.feel)}°</div><div>降雨機率 ${p.pop}%${p.mm > 0 ? `，約 ${fmt1(p.mm)} mm` : ''}</div><div><small>風 ${fmt0(p.wind)} km/h · 濕度 ${p.rh}%${p.uv >= 3 ? ` · 紫外線 ${fmt0(p.uv)}` : ''}</small></div>`;
+  tip.classList.add('on');
+  const tipW = tip.offsetWidth;
+  let left = px; left = clamp(left, tipW/2 + 4, rect.width - tipW/2 - 4);
+  tip.style.left = left + 'px';
+  tip.style.top = (M.ty(p.temp) * sx - tip.offsetHeight - 14) + 'px';
+}
+(function bindHorizon(){
+  const svg = $('#hz');
+  const pick = (ev) => {
+    const t = ev.target.closest('rect[data-k]');
+    if (t) hzHover(parseInt(t.dataset.k));
+  };
+  svg.addEventListener('mousemove', pick);
+  svg.addEventListener('touchstart', (e) => { const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY); if (el && el.dataset.k) hzHover(parseInt(el.dataset.k)); }, {passive:true});
+  svg.addEventListener('touchmove', (e) => { const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY); if (el && el.dataset.k) hzHover(parseInt(el.dataset.k)); }, {passive:true});
+  svg.addEventListener('mouseleave', () => hzHover(-1));
+  svg.addEventListener('keydown', (e) => {
+    if (!hzModel) return;
+    if (e.key === 'ArrowRight'){ hzHover(clamp((hzK < 0 ? hzModel.nowK : hzK) + 1, 0, hzModel.pts.length-1)); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft'){ hzHover(clamp((hzK < 0 ? hzModel.nowK : hzK) - 1, 0, hzModel.pts.length-1)); e.preventDefault(); }
+    else if (e.key === 'Escape'){ hzHover(-1); }
+  });
+  svg.addEventListener('focus', () => { if (hzModel && hzK < 0) hzHover(hzModel.nowK); });
+  svg.addEventListener('blur', () => hzHover(-1));
+})();
+
+/* ---- now facts ---- */
+function renderFacts(m){
+  const c = m.current;
+  const rh = c.relative_humidity_2m;
+  const uv = c.uv_index ?? 0;
+  const uvText = uv < 3 ? '低' : uv < 6 ? '中等' : uv < 8 ? '高' : uv < 11 ? '很高' : '極端';
+  const rhText = rh >= 85 ? '很潮濕' : rh >= 70 ? '偏濕' : rh >= 40 ? '舒適' : '偏乾';
+  const wind = c.wind_speed_10m;
+  const windText = wind < 6 ? '幾乎無風' : wind < 20 ? '微風' : wind < 39 ? '有風' : wind < 62 ? '強風' : '非常強';
+  const facts = [
+    ['濕度', `${fmt0(rh)}<small>%</small>`, rhText],
+    ['風', `${fmt0(wind)}<small>km/h</small>`, `${compass(c.wind_direction_10m)}風，${windText}，陣風 ${fmt0(c.wind_gusts_10m)}`],
+    ['紫外線', `${fmt1(uv)}`, c.is_day ? uvText + (uv >= 6 ? '，戶外請防曬' : '') : '夜間'],
+    ['氣壓', `${fmt0(c.pressure_msl)}<small>hPa</small>`, c.pressure_msl < 1000 ? '偏低，留意天氣轉變' : c.pressure_msl > 1020 ? '偏高，天氣穩定' : '正常'],
+    ['雲量', `${fmt0(c.cloud_cover)}<small>%</small>`, c.cloud_cover > 85 ? '整片雲' : c.cloud_cover > 50 ? '多雲' : c.cloud_cover > 20 ? '少雲' : '幾乎無雲'],
+    ['這小時降雨', `${fmt1(c.precipitation)}<small>mm</small>`, c.precipitation > 0 ? '出門帶傘' : '沒下雨'],
+  ];
+  $('#facts').innerHTML = facts.map(f => `<div class="fact"><div class="k">${f[0]}</div><div class="v">${f[1]}</div><div class="n">${f[2]}</div></div>`).join('');
+}
+
+/* ---- 3D district map ---- */
+const GEO = {"dayuan":[[[121.2481,25.1201],[121.2546,25.1008],[121.2726,25.0802],[121.2623,25.0664],[121.2454,25.0553],[121.2367,25.0425],[121.2384,25.0229],[121.2476,25.0106],[121.2235,25.0056],[121.2253,25.0205],[121.2138,25.019],[121.2009,25.0262],[121.1937,25.018],[121.1761,25.0275],[121.1623,25.0264],[121.1676,25.0441],[121.1555,25.0586],[121.1553,25.0814],[121.1733,25.0859],[121.2123,25.1088],[121.2426,25.1152]]],"luzhu":[[[121.2836,25.1172],[121.2827,25.11],[121.3027,25.0969],[121.3248,25.0925],[121.3382,25.0839],[121.3428,25.073],[121.3549,25.0653],[121.3292,25.0608],[121.322,25.054],[121.2959,25.047],[121.3025,25.0332],[121.2713,25.0219],[121.2803,25.0009],[121.2742,24.9922],[121.2597,24.9871],[121.2476,25.0106],[121.2384,25.0229],[121.2367,25.0425],[121.2454,25.0553],[121.2623,25.0664],[121.2726,25.0802],[121.2546,25.1008],[121.2481,25.1201],[121.2603,25.122]]],"guanyin":[[[121.1553,25.0814],[121.1555,25.0586],[121.1676,25.0441],[121.1623,25.0264],[121.1612,25.0141],[121.1684,24.9879],[121.1516,24.9651],[121.1362,24.9725],[121.1279,24.9982],[121.1103,24.9869],[121.1048,24.9968],[121.0785,25.0071],[121.0687,25.0019],[121.0614,25.0112],[121.0347,25.017],[121.0228,25.0073],[121.0498,25.0402],[121.0838,25.0524],[121.0912,25.0616],[121.12,25.0748]]],"guishan":[[[121.3549,25.0653],[121.3801,25.0651],[121.4029,25.0456],[121.3983,25.0301],[121.4121,25.0194],[121.3913,25.0122],[121.4016,24.9992],[121.3687,24.9768],[121.3299,24.9791],[121.3211,24.9877],[121.3323,25.0048],[121.3248,25.0264],[121.3025,25.0332],[121.2959,25.047],[121.322,25.054],[121.3292,25.0608]]],"taoyuan":[[[121.3025,25.0332],[121.3248,25.0264],[121.3323,25.0048],[121.3211,24.9877],[121.3299,24.9791],[121.3237,24.9712],[121.2965,24.9766],[121.2932,24.9677],[121.2812,24.9752],[121.2636,24.9733],[121.2597,24.9871],[121.2742,24.9922],[121.2803,25.0009],[121.2713,25.0219]]],"zhongli":[[[121.1623,25.0264],[121.1761,25.0275],[121.1937,25.018],[121.2009,25.0262],[121.2138,25.019],[121.2253,25.0205],[121.2235,25.0056],[121.2476,25.0106],[121.2597,24.9871],[121.2636,24.9733],[121.2667,24.95],[121.2584,24.9307],[121.2443,24.9251],[121.2288,24.9317],[121.2213,24.9517],[121.1948,24.9572],[121.191,24.97],[121.179,24.9696],[121.177,24.9591],[121.1658,24.9576],[121.1516,24.9651],[121.1684,24.9879],[121.1612,25.0141]]],"xinwu":[[[121.0228,25.0073],[121.0347,25.017],[121.0614,25.0112],[121.0687,25.0019],[121.0785,25.0071],[121.1048,24.9968],[121.1103,24.9869],[121.1279,24.9982],[121.1362,24.9725],[121.1658,24.9576],[121.1476,24.9465],[121.1274,24.9533],[121.1064,24.9463],[121.0891,24.9566],[121.0584,24.9366],[121.0377,24.9463],[121.0193,24.9404],[121.007,24.9463],[121.0031,24.9401],[120.986,24.9395],[121.0125,24.9743],[121.0105,24.9873]]],"bade":[[[121.3237,24.9712],[121.3296,24.9669],[121.3279,24.9492],[121.3158,24.9385],[121.2983,24.9241],[121.2779,24.9202],[121.2726,24.928],[121.2531,24.9088],[121.2518,24.9216],[121.2584,24.9307],[121.2667,24.95],[121.2636,24.9733],[121.2812,24.9752],[121.2932,24.9677],[121.2965,24.9766]]],"pingzhen":[[[121.177,24.9591],[121.179,24.9696],[121.191,24.97],[121.1948,24.9572],[121.2213,24.9517],[121.2288,24.9317],[121.2443,24.9251],[121.2584,24.9307],[121.2518,24.9216],[121.2531,24.9088],[121.2492,24.886],[121.2345,24.8868],[121.2288,24.894],[121.1952,24.8878],[121.1847,24.8899],[121.1888,24.9284]]],"yangmei":[[[121.1658,24.9576],[121.177,24.9591],[121.1888,24.9284],[121.1847,24.8899],[121.1746,24.8815],[121.1755,24.8722],[121.1581,24.8753],[121.1557,24.8806],[121.122,24.8802],[121.1084,24.886],[121.109,24.8977],[121.091,24.8934],[121.059,24.9072],[121.0584,24.9366],[121.0891,24.9566],[121.1064,24.9463],[121.1274,24.9533],[121.1476,24.9465]]],"daxi":[[[121.3158,24.9385],[121.3231,24.9313],[121.3397,24.9284],[121.3176,24.9163],[121.3261,24.9093],[121.3202,24.9002],[121.3421,24.8926],[121.3459,24.8683],[121.3536,24.8586],[121.3358,24.845],[121.3281,24.8224],[121.3191,24.8184],[121.3165,24.8034],[121.2862,24.8162],[121.243,24.8088],[121.2439,24.8139],[121.2676,24.8489],[121.2588,24.8648],[121.2478,24.8584],[121.2492,24.886],[121.2531,24.9088],[121.2726,24.928],[121.2779,24.9202],[121.2983,24.9241]]],"longtan":[[[121.1847,24.8899],[121.1952,24.8878],[121.2288,24.894],[121.2345,24.8868],[121.2492,24.886],[121.2478,24.8584],[121.2588,24.8648],[121.2676,24.8489],[121.2439,24.8139],[121.243,24.8088],[121.2215,24.7995],[121.2171,24.8125],[121.2075,24.8069],[121.2033,24.8174],[121.1737,24.8277],[121.1763,24.832],[121.15,24.8444],[121.1614,24.8596],[121.1581,24.8753],[121.1755,24.8722],[121.1746,24.8815]]],"fuxing":[[[121.3358,24.845],[121.3549,24.844],[121.3729,24.8349],[121.3933,24.844],[121.4154,24.8357],[121.4367,24.8119],[121.4382,24.7954],[121.4503,24.7909],[121.4468,24.7828],[121.4233,24.762],[121.4354,24.7328],[121.4501,24.7058],[121.4742,24.6961],[121.4799,24.6739],[121.4597,24.6733],[121.4476,24.658],[121.4514,24.651],[121.4404,24.635],[121.4279,24.6063],[121.4128,24.6037],[121.4029,24.5917],[121.3875,24.5866],[121.3634,24.6028],[121.3588,24.6175],[121.3656,24.6317],[121.3522,24.6448],[121.3536,24.6663],[121.3397,24.6704],[121.3386,24.6797],[121.318,24.698],[121.2996,24.6965],[121.3075,24.72],[121.2987,24.7307],[121.3077,24.755],[121.293,24.7653],[121.2601,24.7818],[121.2612,24.79],[121.2472,24.7974],[121.2432,24.8088],[121.2862,24.8162],[121.3165,24.8034],[121.3191,24.8184],[121.3281,24.8224]]]};
+const METRICS = {
+  temp: {label:'氣溫', ramp:['--t1','--t2','--t3','--t4','--t5'], val:(a)=>a.current.temperature_2m, fmt:(v)=>`${fmt1(v)}°`, hint:'愈深愈熱'},
+  rain: {label:'降雨', ramp:['--b1','--b2','--b3','--b4','--b5'], val:(a)=>a.current.precipitation ?? 0, fmt:(v)=>`${fmt1(v)} mm`, hint:'這小時雨量，愈深愈多'},
+  hum:  {label:'濕度', ramp:['--g1','--g2','--g3','--g4','--g5'], val:(a)=>a.current.relative_humidity_2m, fmt:(v)=>`${fmt0(v)}%`, hint:'愈深愈潮濕'},
+  wind: {label:'風速', ramp:['--v1','--v2','--v3','--v4','--v5'], val:(a)=>a.current.wind_speed_10m, fmt:(v)=>`${fmt0(v)} km/h`, hint:'愈深風愈大'},
+};
+const map3d = (() => {
+  const canvas = $('#mapCanvas'), wrap = $('#map3d'), tip = $('#mapTip');
+  const ctx = canvas.getContext('2d');
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // world coordinates: equirectangular, normalised so the county spans ~1 unit
+  const cosLat = Math.cos(24.9 * Math.PI / 180);
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  Object.values(GEO).forEach(rings => rings[0].forEach(([lon, lat]) => { const x = lon * cosLat; minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, lat); maxY = Math.max(maxY, lat); }));
+  const span = Math.max(maxX - minX, maxY - minY), cx0 = (minX + maxX) / 2, cy0 = (minY + maxY) / 2;
+  const world = DISTRICTS.map(d => GEO[d.id][0].map(([lon, lat]) => [(lon * cosLat - cx0) / span, (lat - cy0) / span]));
+  const centroid = (ring) => { let a = 0, x = 0, y = 0; for (let i = 0; i < ring.length; i++){ const [x1,y1] = ring[i], [x2,y2] = ring[(i+1)%ring.length]; const f = x1*y2 - x2*y1; a += f; x += (x1+x2)*f; y += (y1+y2)*f; } a *= 3; return a ? [x/a, y/a] : ring[0]; };
+  const cents = world.map(centroid);
+  const inPoly = (px, py, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++){ const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > py) !== (yj > py) && px < (xj - xi) * (py - yi) / (yj - yi) + xi) c = !c; } return c; };
+  // rain particle seeds inside each footprint (deterministic)
+  const seeds = world.map((ring, i) => {
+    const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const out = []; let guard = 0;
+    let r = 12345 + i * 977; const rnd = () => { r = (r * 1103515245 + 12345) & 0x7fffffff; return r / 0x7fffffff; };
+    while (out.length < 26 && guard++ < 3000){ const x = x0 + rnd() * (x1 - x0), y = y0 + rnd() * (y1 - y0); if (inPoly(x, y, ring)) out.push([x, y, rnd()]); }
+    return out;
+  });
+
+  const DEF = {yaw: -0.42, pitch: 1.0, zoom: 1};
+  const view = {yaw: 0, pitch: Math.PI / 2, zoom: 1};
+  let data = null, metric = 'temp', hover = -1, W = 0, H = 0, dpr = 1;
+  let anim = null, rafId = 0, lastT = 0, rainT = 0;
+  const heightOf = (elev) => 0.026 + Math.sqrt(Math.max(elev || 0, 0)) * 0.0056;
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = wrap.clientWidth; H = wrap.clientHeight;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    draw();
+  }
+  function project(x, y, z, S){
+    const c = Math.cos(view.yaw), s = Math.sin(view.yaw);
+    const rx = x * c - y * s, ry = x * s + y * c;
+    const sp = Math.sin(view.pitch), cp = Math.cos(view.pitch);
+    return [W / 2 + rx * S, H / 2 - 0.03 * H - (ry * sp + z * cp) * S, ry, rx];
+  }
+  let topPolys = [];
+  function colors(){
+    const m = METRICS[metric];
+    return { ramp: m.ramp.map(cssVar), surface: cssVar('--surface'), ink: cssVar('--ink'), ink2: cssVar('--ink-2'), muted: cssVar('--muted'), ground: cssVar('--ground'), grid: cssVar('--grid'), hair: cssVar('--hair'), rain: cssVar('--rain') };
+  }
+  function shade(hex, f){ const [r, g, b] = hexToRgb(hex); return `rgb(${Math.round(r*f)},${Math.round(g*f)},${Math.round(b*f)})`; }
+  function valueRange(){
+    if (!data) return null;
+    const m = METRICS[metric]; const vals = DISTRICTS.map((d, i) => data[i] ? m.val(data[i]) : null).filter(v => v != null);
+    if (!vals.length) return null;
+    return {lo: Math.min(...vals), hi: Math.max(...vals)};
+  }
+  function rampIdx(v, rg){ if (metric === 'rain' && v <= 0) return -1; if (rg.hi - rg.lo < 1e-6) return 2; return clamp(Math.floor((v - rg.lo) / (rg.hi - rg.lo + 1e-9) * 5), 0, 4); }
+
+  function draw(){
+    if (!W || !H) return;
+    const C = colors();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const sp = Math.sin(view.pitch);
+    const S = Math.min(W * 0.92, H / (0.62 + 0.38 * sp) * 0.8) * view.zoom;
+    // ground plate + grid
+    const G = 0.64;
+    const plate = [[-G,-G],[G,-G],[G,G],[-G,G]].map(p => project(p[0], p[1], 0, S));
+    ctx.beginPath(); plate.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+    ctx.fillStyle = C.ground; ctx.fill();
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (let g = -0.6; g <= 0.61; g += 0.1){
+      const a = project(g, -G, 0, S), b = project(g, G, 0, S); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]);
+      const c = project(-G, g, 0, S), d = project(G, g, 0, S); ctx.moveTo(c[0], c[1]); ctx.lineTo(d[0], d[1]);
+    }
+    ctx.stroke();
+    // prisms
+    const rg = valueRange();
+    const items = DISTRICTS.map((d, i) => {
+      const a = data && data[i];
+      const h = heightOf(a ? a.elevation : 60);
+      const top = world[i].map(p => project(p[0], p[1], h, S));
+      const bot = world[i].map(p => project(p[0], p[1], 0, S));
+      const cen = project(cents[i][0], cents[i][1], h, S);
+      let fill = C.hair;
+      if (a && rg){ const k = rampIdx(METRICS[metric].val(a), rg); fill = k < 0 ? C.hair : C.ramp[k]; }
+      return {i, top, bot, cen, h, fill, depth: cen[2], a};
+    });
+    items.sort((p, q) => q.depth - p.depth);
+    topPolys = items.map(it => ({i: it.i, poly: it.top}));
+    const sel = state.district.id;
+    items.forEach(it => {
+      const ring = it.top, n = ring.length;
+      let area = 0; for (let k = 0; k < n; k++){ const p = it.bot[k], q = it.bot[(k+1)%n]; area += p[3]*q[2] - q[3]*p[2]; }
+      const ccw = area > 0;
+      for (let k = 0; k < n; k++){
+        const p = it.bot[k], q = it.bot[(k+1)%n];
+        const ex = q[3] - p[3], ey = q[2] - p[2];
+        let nx = ccw ? ey : -ey, ny = ccw ? -ex : ex;   // outward normal in camera space
+        const len = Math.hypot(nx, ny) || 1; nx /= len; ny /= len;
+        if (ny >= 0) continue;                           // back face
+        const lit = 0.5 + 0.35 * Math.max(0, (-0.55 * nx - 0.83 * ny));
+        ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.lineTo(ring[(k+1)%n][0], ring[(k+1)%n][1]); ctx.lineTo(ring[k][0], ring[k][1]); ctx.closePath();
+        ctx.fillStyle = shade(it.fill, lit); ctx.fill();
+        ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 0.6; ctx.stroke();
+      }
+      ctx.beginPath(); ring.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath();
+      ctx.fillStyle = it.fill; ctx.fill();
+      if (hover === it.i){ ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fill(); }
+      ctx.strokeStyle = C.surface; ctx.lineWidth = 1.2; ctx.stroke();
+      if (DISTRICTS[it.i].id === sel){ ctx.strokeStyle = C.ink; ctx.lineWidth = 2; ctx.stroke(); }
+    });
+    // rain streaks over districts where it is raining now
+    if (data){
+      ctx.strokeStyle = C.rain; ctx.lineWidth = 1.6; ctx.lineCap = 'round';
+      items.forEach(it => {
+        if (!it.a || !(it.a.current.precipitation > 0)) return;
+        const strength = clamp(it.a.current.precipitation, 0.3, 4) / 4;
+        const cnt = Math.round(8 + strength * 18);
+        seeds[it.i].slice(0, cnt).forEach(([x, y, ph]) => {
+          const f = reduced() ? ph : ((rainT * (0.35 + ph * 0.25) + ph) % 1);
+          const z = it.h + 0.13 * (1 - f);
+          const a = project(x, y, z, S), b = project(x, y, z + 0.034, S);
+          ctx.globalAlpha = .25 + .55 * (1 - f);
+          ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+        });
+      });
+      ctx.globalAlpha = 1;
+    }
+    // labels
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const small = S < 380;
+    items.forEach(it => {
+      const [x, y] = it.cen; const name = DISTRICTS[it.i].name.replace('區', '');
+      const v = it.a && rg ? METRICS[metric].fmt(METRICS[metric].val(it.a)) : '';
+      ctx.lineWidth = 3; ctx.strokeStyle = C.surface;
+      ctx.font = `500 ${small ? 11 : 12}px ${cssVar('--font-tc')}`;
+      ctx.strokeText(name, x, y - (v ? 8 : 0)); ctx.fillStyle = C.ink; ctx.fillText(name, x, y - (v ? 8 : 0));
+      if (v){ ctx.font = `600 ${small ? 12 : 13.5}px ${cssVar('--font-num')}`; ctx.strokeText(v, x, y + 8); ctx.fillText(v, x, y + 8); }
+    });
+    // compass (north arrow follows the rotation)
+    const ax = W - 30, ay = 30, L = 12;
+    const dirx = -Math.sin(view.yaw), diry = -Math.cos(view.yaw) * Math.sin(view.pitch);
+    ctx.strokeStyle = C.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(ax - dirx * L, ay - diry * L); ctx.lineTo(ax + dirx * L, ay + diry * L); ctx.stroke();
+    ctx.fillStyle = C.muted; ctx.beginPath(); ctx.moveTo(ax + dirx * L, ay + diry * L); ctx.lineTo(ax + dirx * (L - 6) - diry * 3.5, ay + diry * (L - 6) + dirx * 3.5); ctx.lineTo(ax + dirx * (L - 6) + diry * 3.5, ay + diry * (L - 6) - dirx * 3.5); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = C.ink2; ctx.font = `500 11px ${cssVar('--font-tc')}`; ctx.fillText('北', ax + dirx * (L + 9), ay + diry * (L + 9));
+  }
+
+  /* animation loop: runs only while a view transition or rain is active */
+  function frame(t){
+    rafId = 0;
+    const dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0; lastT = t;
+    let busy = false;
+    if (anim){
+      const k = clamp((t - anim.t0) / anim.dur, 0, 1), e = 1 - Math.pow(1 - k, 3);
+      view.yaw = lerp(anim.from.yaw, anim.to.yaw, e); view.pitch = lerp(anim.from.pitch, anim.to.pitch, e); view.zoom = lerp(anim.from.zoom, anim.to.zoom, e);
+      if (k >= 1) anim = null; else busy = true;
+    }
+    const raining = data && !reduced() && data.some(a => a && a.current.precipitation > 0);
+    if (raining){ rainT += dt; busy = true; }
+    draw();
+    if (busy && !document.hidden) rafId = requestAnimationFrame(frame); else lastT = 0;
+  }
+  const kick = () => { if (!rafId) rafId = requestAnimationFrame(frame); };
+  function animateTo(to, dur = 700){
+    if (reduced()){ Object.assign(view, to); draw(); return; }
+    anim = {from: {...view}, to: {...view, ...to}, t0: performance.now(), dur}; kick();
+  }
+
+  /* pointer interaction */
+  const pointers = new Map(); let dragging = false, moved = 0, pinch0 = 0, zoom0 = 1;
+  function hitTest(px, py){ for (let k = topPolys.length - 1; k >= 0; k--){ if (inPoly(px, py, topPolys[k].poly)) return topPolys[k].i; } return -1; }
+  function showTip(i, px, py){
+    if (i < 0 || !data || !data[i]){ tip.classList.remove('on'); return; }
+    const a = data[i], w = wx(a.current.weather_code, a.current.is_day === 1);
+    tip.innerHTML = `<div><b>${DISTRICTS[i].name}</b> <small>海拔 ${fmt0(a.elevation)} m</small></div><div>${w.text}，${fmt1(a.current.temperature_2m)}°</div><div><small>濕度 ${a.current.relative_humidity_2m}% · 風 ${fmt0(a.current.wind_speed_10m)} km/h · 雨 ${fmt1(a.current.precipitation)} mm</small></div>`;
+    tip.classList.add('on');
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    tip.style.left = clamp(px + 14, 4, W - tw - 4) + 'px';
+    tip.style.top = clamp(py - th - 10, 4, H - th - 4) + 'px';
+  }
+  function setHover(i, px, py){ if (i !== hover){ hover = i; draw(); } if (px != null) showTip(i, px, py); }
+  canvas.addEventListener('pointerdown', (e) => {
+    canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, [e.clientX, e.clientY]);
+    dragging = true; moved = 0; canvas.classList.add('drag');
+    if (pointers.size === 2){ const [a, b] = [...pointers.values()]; pinch0 = Math.hypot(a[0]-b[0], a[1]-b[1]); zoom0 = view.zoom; }
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    if (dragging && pointers.has(e.pointerId)){
+      const prev = pointers.get(e.pointerId); pointers.set(e.pointerId, [e.clientX, e.clientY]);
+      if (pointers.size === 2){
+        const [a, b] = [...pointers.values()]; const d = Math.hypot(a[0]-b[0], a[1]-b[1]);
+        if (pinch0) view.zoom = clamp(zoom0 * d / pinch0, 0.6, 3);
+      } else {
+        const dx = e.clientX - prev[0], dy = e.clientY - prev[1];
+        moved += Math.abs(dx) + Math.abs(dy);
+        view.yaw += dx * 0.008; view.pitch = clamp(view.pitch - dy * 0.006, 0.32, Math.PI / 2);
+      }
+      tip.classList.remove('on'); anim = null; draw();
+    } else if (e.pointerType !== 'touch'){
+      setHover(hitTest(px, py), px, py);
+    }
+  });
+  const endPointer = (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.delete(e.pointerId);
+    if (pointers.size === 0){
+      dragging = false; canvas.classList.remove('drag');
+      if (moved < 6){ const r = canvas.getBoundingClientRect(); const i = hitTest(e.clientX - r.left, e.clientY - r.top); if (i >= 0){ if (e.pointerType === 'touch') setHover(i, e.clientX - r.left, e.clientY - r.top); selectDistrict(DISTRICTS[i].id); } }
+    }
+  };
+  canvas.addEventListener('pointerup', endPointer); canvas.addEventListener('pointercancel', endPointer);
+  canvas.addEventListener('pointerleave', () => { if (!dragging) setHover(-1); tip.classList.remove('on'); });
+  canvas.addEventListener('wheel', (e) => { e.preventDefault(); view.zoom = clamp(view.zoom * Math.exp(-e.deltaY * 0.0012), 0.6, 3); anim = null; draw(); }, {passive: false});
+  canvas.addEventListener('keydown', (e) => {
+    const n = DISTRICTS.length;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      if (e.shiftKey){ view.yaw += (e.key === 'ArrowRight' ? 1 : -1) * 0.15; draw(); }
+      else {
+        const i = hover < 0 ? DISTRICTS.findIndex(d => d.id === state.district.id) : hover;
+        const j = (i + (e.key === 'ArrowRight' ? 1 : n - 1)) % n; hover = j; draw();
+        const c = topPolys.find(t => t.i === j);
+        if (c){ const xs = c.poly.map(p => p[0]), ys = c.poly.map(p => p[1]); showTip(j, (Math.min(...xs)+Math.max(...xs))/2, (Math.min(...ys)+Math.max(...ys))/2); }
+      }
+      e.preventDefault();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown'){ view.pitch = clamp(view.pitch + (e.key === 'ArrowUp' ? -0.1 : 0.1), 0.32, Math.PI/2); draw(); e.preventDefault(); }
+    else if (e.key === 'Enter' || e.key === ' '){ if (hover >= 0) selectDistrict(DISTRICTS[hover].id); e.preventDefault(); }
+    else if (e.key === '+' || e.key === '='){ view.zoom = clamp(view.zoom * 1.2, 0.6, 3); draw(); }
+    else if (e.key === '-'){ view.zoom = clamp(view.zoom / 1.2, 0.6, 3); draw(); }
+    else if (e.key === 'Home'){ animateTo(DEF); }
+    else if (e.key === 'Escape'){ setHover(-1); tip.classList.remove('on'); }
+  });
+  canvas.addEventListener('blur', () => { setHover(-1); tip.classList.remove('on'); });
+  $('#mapTop').addEventListener('click', () => animateTo({yaw: 0, pitch: Math.PI / 2}));
+  $('#mapReset').addEventListener('click', () => animateTo(DEF));
+  $('#mapZoomIn').addEventListener('click', () => animateTo({zoom: clamp(view.zoom * 1.25, 0.6, 3)}, 300));
+  $('#mapZoomOut').addEventListener('click', () => animateTo({zoom: clamp(view.zoom / 1.25, 0.6, 3)}, 300));
+  $('#mapSeg').addEventListener('click', (e) => { const b = e.target.closest('button[data-metric]'); if (b) setMetric(b.dataset.metric); });
+
+  function legend(){
+    const m = METRICS[metric], rg = valueRange();
+    const raining = data ? data.filter(a => a && a.current.precipitation > 0).length : 0;
+    let html = '';
+    if (rg && !(metric === 'rain' && rg.hi <= 0)){
+      html += `<span>${m.fmt(rg.lo)}</span><span class="steps">${m.ramp.map(c => `<i style="background:var(${c})"></i>`).join('')}</span><span>${m.fmt(rg.hi)}</span><span>${m.hint}</span>`;
+    } else if (metric === 'rain') html += `<span>現在沒有區在下雨</span>`;
+    else html += `<span>等待資料</span>`;
+    html += `<span class="rainkey"><i></i>${raining ? `${raining} 個區正在下雨` : '雨絲代表正在下雨'}</span>`;
+    $('#mapRamp').innerHTML = html;
+  }
+  function setMetric(m){
+    metric = m;
+    $('#mapSeg').querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.metric === m)));
+    legend(); draw();
+  }
+  function setData(arr){
+    const first = !data;
+    data = Array.isArray(arr) ? arr : null;
+    legend(); draw();
+    if (first && data) animateTo(DEF, 1100); else kick();
+  }
+  new ResizeObserver(resize).observe(wrap);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
+  resize();
+  return {setData, setMetric, draw};
+})();
+
+function renderMap(arr){
+  if (!Array.isArray(arr)) return;
+  map3d.setData(arr);
+  $('#mapTable').innerHTML = tableHTML(['行政區','海拔','氣溫','天氣','濕度','風速','這小時雨量'],
+    DISTRICTS.map((d,i) => { const a = arr[i]; if (!a) return [d.name,'--','--','--','--','--','--']; const w = wx(a.current.weather_code, a.current.is_day === 1); return [d.name, `${fmt0(a.elevation)} m`, `${fmt1(a.current.temperature_2m)}°`, w.text, `${a.current.relative_humidity_2m}%`, `${fmt0(a.current.wind_speed_10m)} km/h`, `${fmt1(a.current.precipitation)} mm`]; }));
+}
+
+/* ---- week ---- */
+function renderWeek(m){
+  const D = m.daily;
+  const todayISO = nowTaipeiISO().slice(0,10);
+  let start = D.time.indexOf(todayISO); if (start < 0) start = 1;
+  const days = [];
+  for (let i = start; i < D.time.length; i++) days.push(i);
+  const lo = Math.min(...days.map(i => D.temperature_2m_min[i])), hi = Math.max(...days.map(i => D.temperature_2m_max[i]));
+  const span = Math.max(hi - lo, 1);
+  const labelFor = (i, k) => k === 0 ? '今天' : k === 1 ? '明天' : weekday(D.time[i]);
+  let html = '';
+  days.forEach((i, k) => {
+    const w = wx(D.weather_code[i], true);
+    const pop = D.precipitation_probability_max[i] ?? 0;
+    const l = (D.temperature_2m_min[i] - lo) / span * 100, r = (D.temperature_2m_max[i] - lo) / span * 100;
+    html += `<div class="d">${labelFor(i,k)}<small>${md(D.time[i])}</small></div>
+      <div class="c">${icon(w.kind, 26)}<span>${w.text}${D.precipitation_sum[i] >= 1 ? `，約 ${fmt0(D.precipitation_sum[i])} mm` : ''}</span></div>
+      <div class="p"><div class="bar"><i style="width:${pop}%"></i></div><b>${pop}%</b></div>
+      <div class="t"><div class="track"><span class="lo" style="right:calc(${(100-l).toFixed(1)}% + 8px)">${fmt0(D.temperature_2m_min[i])}°</span><span class="rng" style="left:${l.toFixed(1)}%;width:${Math.max(r-l,1).toFixed(1)}%"></span><span class="hi" style="left:calc(${r.toFixed(1)}% + 8px)">${fmt0(D.temperature_2m_max[i])}°</span></div></div>`;
+  });
+  $('#week').innerHTML = html;
+  $('#weekTable').innerHTML = tableHTML(['日期','天氣','最低','最高','降雨機率','雨量','最大風速','紫外線'],
+    days.map(i => [`${md(D.time[i])} ${weekday(D.time[i])}`, wx(D.weather_code[i], true).text, `${fmt1(D.temperature_2m_min[i])}°`, `${fmt1(D.temperature_2m_max[i])}°`, `${D.precipitation_probability_max[i] ?? 0}%`, `${fmt1(D.precipitation_sum[i])} mm`, `${fmt0(D.wind_speed_10m_max[i])} km/h`, fmt1(D.uv_index_max[i])]));
+}
+
+/* ---- air ---- */
+const AQI_BANDS = [[0,50,'良好','--aqi1','適合所有戶外活動。'],[51,100,'普通','--aqi2','極少數特別敏感的人要留意。'],[101,150,'對敏感族群不健康','--aqi3','有心肺疾病、老人與小孩減少長時間戶外劇烈活動。'],[151,200,'對所有族群不健康','--aqi4','所有人減少戶外劇烈活動，出門戴口罩。'],[201,300,'非常不健康','--aqi5','避免戶外活動，關窗開空氣清淨機。'],[301,500,'危害','--aqi6','留在室內，避免任何戶外活動。']];
+function aqiBand(v){ return AQI_BANDS.find(b => v <= b[1]) || AQI_BANDS[5]; }
+function renderAir(aq){
+  if (!aq || !aq.current) return;
+  const v = aq.current.us_aqi;
+  const b = aqiBand(v);
+  $('#aqiVal').textContent = fmt0(v);
+  $('#aqiCat').innerHTML = `<i style="background:var(${b[3]})"></i><span>${b[2]}</span>`;
+  $('#meter').innerHTML = AQI_BANDS.map((x,i) => `<i class="${x === b ? 'on' : ''}" style="background:var(${x[3]});flex:${[50,50,50,50,100,200][i]};margin-right:${i<5?2:0}px"></i>`).join('');
+  $('#airAdvice').textContent = b[4];
+  const c = aq.current;
+  $('#pollut').innerHTML = [['PM2.5', c.pm2_5, 'µg/m³'],['PM10', c.pm10, 'µg/m³'],['臭氧', c.ozone, 'µg/m³'],['二氧化氮', c.nitrogen_dioxide, 'µg/m³']]
+    .map(p => `<div><div class="k">${p[0]}</div><div class="v">${fmt1(p[1])}<small>${p[2]}</small></div></div>`).join('');
+  // 24h sparkline of PM2.5 up to now
+  const H = aq.hourly;
+  const nowISO = nowTaipeiISO();
+  let idx = H.time.findIndex(t => t > nowISO) - 1; if (idx < 0) idx = H.time.length - 1;
+  const from = Math.max(0, idx - 23);
+  const ser = H.pm2_5.slice(from, idx + 1).map(v => v ?? 0);
+  const times = H.time.slice(from, idx + 1);
+  const W = 520, Hh = 70, pl = 6, pr = 40, top = 12, bot = 52;
+  const mx = Math.max(15, ...ser);
+  const sx = (i) => pl + i * (W - pl - pr) / Math.max(ser.length - 1, 1);
+  const sy = (v) => bot - v / mx * (bot - top);
+  const line = ser.map((v,i) => [sx(i), sy(v)]);
+  const d = smoothPath(line);
+  const guide = 15; // WHO 24h guideline for PM2.5
+  let svg = `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="過去 24 小時 PM2.5 變化">`;
+  svg += `<line x1="${pl}" x2="${W-pr}" y1="${sy(guide).toFixed(1)}" y2="${sy(guide).toFixed(1)}" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  svg += `<text x="${W-pr+6}" y="${(sy(guide)+4).toFixed(1)}" font-size="11" fill="${cssVar('--muted')}">15</text>`;
+  svg += `<path d="${d}" fill="none" stroke="${cssVar('--teal')}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const last = line[line.length-1];
+  svg += `<circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" fill="${cssVar('--teal')}" stroke="${cssVar('--surface')}" stroke-width="2"/>`;
+  svg += `<text x="${pl}" y="${Hh-2}" font-size="11" fill="${cssVar('--muted')}">PM2.5 過去 24 小時，${hhmm(times[0])}</text><text x="${W-pr}" y="${Hh-2}" font-size="11" text-anchor="end" fill="${cssVar('--muted')}">現在 ${fmt1(ser[ser.length-1])}</text>`;
+  svg += `</svg>`;
+  $('#spark').innerHTML = svg;
+}
+
+/* ---- sun ---- */
+function renderSun(m){
+  const D = m.daily;
+  const todayISO = nowTaipeiISO().slice(0,10);
+  let i = D.time.indexOf(todayISO); if (i < 0) i = 1;
+  const rise = D.sunrise[i], set = D.sunset[i];
+  const toMin = (iso) => parseInt(iso.slice(11,13))*60 + parseInt(iso.slice(14,16));
+  const r = toMin(rise), s = toMin(set), n = toMin(nowTaipeiISO());
+  const len = s - r;
+  const W = 420, H = 176, cx = W/2, cy = 150, R = 138;
+  const ang = (t) => Math.PI + clamp((t - r) / len, -0.12, 1.12) * Math.PI;   // left → right
+  const pt = (t) => [cx + R * Math.cos(ang(t)), cy + R * Math.sin(ang(t))];
+  const arcPath = `M${cx-R},${cy} A${R},${R} 0 0 1 ${cx+R},${cy}`;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="今天太陽位置示意">`;
+  svg += `<line x1="0" x2="${W}" y1="${cy}" y2="${cy}" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  svg += `<path d="${arcPath}" fill="none" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  if (n >= r && n <= s){
+    const [sx, sy] = pt(n);
+    const doneR = (n - r) / len;
+    const large = doneR > .5 ? 1 : 0;
+    svg += `<path d="M${cx-R},${cy} A${R},${R} 0 ${large} 1 ${sx.toFixed(1)},${sy.toFixed(1)}" fill="none" stroke="${cssVar('--sun')}" stroke-width="2"/>`;
+    svg += `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="8" fill="${cssVar('--sun')}" stroke="${cssVar('--surface')}" stroke-width="2"/>`;
+  } else {
+    const [sx, sy] = pt(n < r ? r - len*0.08 : s + len*0.08);
+    svg += `<circle cx="${sx.toFixed(1)}" cy="${Math.min(sy, cy+14).toFixed(1)}" r="7" fill="none" stroke="${cssVar('--muted')}" stroke-width="1.5"/>`;
+  }
+  svg += `<text x="${cx-R}" y="${cy+18}" text-anchor="middle" font-size="12" fill="${cssVar('--ink-2')}">${hhmm(rise)}</text><text x="${cx+R}" y="${cy+18}" text-anchor="middle" font-size="12" fill="${cssVar('--ink-2')}">${hhmm(set)}</text>`;
+  svg += `</svg>`;
+  $('#sunarc').innerHTML = svg;
+  const uv = D.uv_index_max[i];
+  const uvText = uv < 3 ? '低' : uv < 6 ? '中等' : uv < 8 ? '高' : uv < 11 ? '很高' : '極端';
+  $('#sunFacts').innerHTML = [['日出', hhmm(rise)], ['日落', hhmm(set)], ['日照長度', `${Math.floor(len/60)} 小時 ${len%60} 分`], ['今日最高紫外線', `${fmt1(uv)}`, uvText]]
+    .map(f => `<div><div class="k">${f[0]}</div><div class="v">${f[1]}</div>${f[2] ? `<div class="k">${f[2]}</div>` : ''}</div>`).join('');
+  const tomorrow = D.time[i+1] ? ` 明天日出 ${hhmm(D.sunrise[i+1])}。` : '';
+  $('#sunLead').textContent = n < r ? `天還沒亮，${Math.floor((r-n)/60)} 小時 ${(r-n)%60} 分後日出。` : n <= s ? `離日落還有 ${Math.floor((s-n)/60)} 小時 ${(s-n)%60} 分。` : `太陽已經下山。${tomorrow}`;
+}
+
+/* ---- history ---- */
+let histModel = null;
+function renderHistory(h){
+  if (!h || !h.daily) return;
+  const D = h.daily;
+  const todayISO = nowTaipeiISO().slice(0,10);
+  let end = D.time.indexOf(todayISO); if (end < 0) end = D.time.length - 1;
+  const idxs = []; for (let i = Math.max(0, end - 29); i <= end; i++) idxs.push(i);
+  const N = idxs.length, HT = 300, padL = 46, padR = 16;
+  const W = Math.max($('#hist').clientWidth || 1000, 320);
+  $('#histSvg').setAttribute('viewBox', `0 0 ${W} ${HT}`);
+  const x = (k) => padL + (k + .5) * (W - padL - padR) / N;
+  const slot = (W - padL - padR) / N, bw = clamp(slot - 3, 3, 16);
+  const tTop = 20, tBot = 160, rTop = 190, rBot = 262, axisY = 284;
+  const mins = idxs.map(i => D.temperature_2m_min[i]), maxs = idxs.map(i => D.temperature_2m_max[i]), rains = idxs.map(i => D.precipitation_sum[i] ?? 0);
+  const tMin = Math.floor(Math.min(...mins) - 1), tMax = Math.ceil(Math.max(...maxs) + 1);
+  const rMax = Math.max(10, Math.ceil(Math.max(...rains) / 10) * 10);
+  const ty = (v) => tBot - (v - tMin) / (tMax - tMin) * (tBot - tTop);
+  const ry = (v) => rBot - v / rMax * (rBot - rTop);
+  let svg = '';
+  // temp gridlines: every 5 degrees
+  for (let g = Math.ceil(tMin/5)*5; g <= tMax; g += 5){
+    svg += `<line x1="${padL}" x2="${W-padR}" y1="${ty(g).toFixed(1)}" y2="${ty(g).toFixed(1)}" stroke="${cssVar('--hair-2')}" stroke-width="1"/><text x="${padL-8}" y="${(ty(g)+4).toFixed(1)}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">${g}°</text>`;
+  }
+  svg += `<line x1="${padL}" x2="${W-padR}" y1="${rBot}" y2="${rBot}" stroke="${cssVar('--hair')}" stroke-width="1"/>`;
+  svg += `<text x="${padL-8}" y="${rTop+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">${rMax}mm</text><text x="${padL-8}" y="${rBot+4}" text-anchor="end" font-size="11" fill="${cssVar('--muted')}">0</text>`;
+  const hiK = maxs.indexOf(Math.max(...maxs)), loK = mins.indexOf(Math.min(...mins)), rainK = rains.indexOf(Math.max(...rains));
+  idxs.forEach((i, k) => {
+    const isToday = k === N-1;
+    const y1 = ty(D.temperature_2m_max[i]), y2 = ty(D.temperature_2m_min[i]);
+    svg += `<rect x="${(x(k)-bw/2).toFixed(1)}" y="${y1.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(y2-y1, 3).toFixed(1)}" rx="3" fill="${cssVar('--clay')}" opacity="${isToday ? .55 : 1}"/>`;
+    const rh = rBot - ry(rains[k]);
+    if (rh > 0.5) svg += `<rect x="${(x(k)-bw/2).toFixed(1)}" y="${ry(rains[k]).toFixed(1)}" width="${bw.toFixed(1)}" height="${rh.toFixed(1)}" rx="3" fill="${cssVar('--rain')}" opacity="${isToday ? .55 : 1}"/>`;
+    const d = D.time[i];
+    const day = parseInt(d.slice(8,10));
+    const every = W < 640 ? 7 : 5;
+    if (k === 0 || k % every === 0 && k !== N-1 || isToday){
+      svg += `<text x="${x(k).toFixed(1)}" y="${axisY+8}" text-anchor="middle" font-size="12" fill="${isToday ? cssVar('--ink') : cssVar('--muted')}" font-weight="${isToday?600:400}">${isToday ? '今天' : md(d)}</text>`;
+    }
+  });
+  const lab = (k, v, y, above) => `<text x="${x(k).toFixed(1)}" y="${(y + (above ? -7 : 16)).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="600" fill="${cssVar('--ink')}">${v}</text>`;
+  svg += lab(hiK, `${fmt0(maxs[hiK])}°`, ty(maxs[hiK]), true);
+  if (loK !== hiK) svg += lab(loK, `${fmt0(mins[loK])}°`, ty(mins[loK]), false);
+  if (rains[rainK] > 0) svg += lab(rainK, `${fmt0(rains[rainK])}mm`, ry(rains[rainK]), true);
+  svg += `<g id="histHits">` + idxs.map((i,k) => `<rect data-k="${k}" x="${(x(k)-slot/2).toFixed(1)}" y="0" width="${slot.toFixed(1)}" height="${HT}" fill="transparent"/>`).join('') + `</g>`;
+  svg += `<line id="histCross" y1="${tTop}" y2="${axisY-6}" stroke="${cssVar('--ink-2')}" stroke-width="1" style="display:none"/>`;
+  $('#histSvg').innerHTML = svg;
+  histModel = {idxs, D, x, ty, W, N};
+  $('#histTable').innerHTML = tableHTML(['日期','最低','最高','雨量','天氣'], idxs.map(i => [`${md(D.time[i])} ${weekday(D.time[i])}`, `${fmt1(D.temperature_2m_min[i])}°`, `${fmt1(D.temperature_2m_max[i])}°`, `${fmt1(D.precipitation_sum[i])} mm`, wx(D.weather_code[i], true).text]));
+  // summary in lead
+  const avgHi = maxs.reduce((a,b)=>a+b,0)/N, rainDays = rains.filter(r => r >= 1).length, total = rains.reduce((a,b)=>a+b,0);
+  $('#histTitle').nextElementSibling.textContent = `這三十天平均最高 ${fmt1(avgHi)}°，有 ${rainDays} 天下雨，累積約 ${fmt0(total)} mm。上方是每日氣溫範圍，下方是日雨量。`;
+}
+let histK = -1;
+function histHover(k){
+  const M = histModel; if (!M) return;
+  const tip = $('#histTip'), cross = $('#histCross');
+  if (k < 0 || k >= M.N){ tip.classList.remove('on'); cross.style.display = 'none'; histK = -1; return; }
+  histK = k;
+  const i = M.idxs[k], D = M.D;
+  const rect = $('#histSvg').getBoundingClientRect(); const sx = rect.width / M.W;
+  cross.style.display = ''; cross.setAttribute('x1', M.x(k)); cross.setAttribute('x2', M.x(k));
+  tip.innerHTML = `<div>${md(D.time[i])} ${weekday(D.time[i])}　${wx(D.weather_code[i], true).text}</div><div><b>${fmt1(D.temperature_2m_min[i])}° – ${fmt1(D.temperature_2m_max[i])}°</b></div><div>雨量 ${fmt1(D.precipitation_sum[i])} mm</div>`;
+  tip.classList.add('on');
+  const tipW = tip.offsetWidth;
+  tip.style.left = clamp(M.x(k) * sx, tipW/2 + 4, rect.width - tipW/2 - 4) + 'px';
+  tip.style.top = (M.ty(D.temperature_2m_max[i]) * sx - tip.offsetHeight - 14) + 'px';
+}
+(function bindHist(){
+  const svg = $('#histSvg');
+  svg.addEventListener('mousemove', (e) => { const t = e.target.closest('rect[data-k]'); if (t) histHover(parseInt(t.dataset.k)); });
+  svg.addEventListener('mouseleave', () => histHover(-1));
+  svg.addEventListener('touchstart', (e) => { const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY); if (el && el.dataset.k) histHover(parseInt(el.dataset.k)); }, {passive:true});
+  svg.addEventListener('touchmove', (e) => { const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY); if (el && el.dataset.k) histHover(parseInt(el.dataset.k)); }, {passive:true});
+  svg.addEventListener('keydown', (e) => {
+    if (!histModel) return;
+    if (e.key === 'ArrowRight'){ histHover(clamp((histK < 0 ? histModel.N-1 : histK) + 1, 0, histModel.N-1)); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft'){ histHover(clamp((histK < 0 ? histModel.N : histK) - 1, 0, histModel.N-1)); e.preventDefault(); }
+    else if (e.key === 'Escape'){ histHover(-1); }
+  });
+  svg.addEventListener('blur', () => histHover(-1));
+})();
+
+/* ---- CWA (official) ---- */
+async function refreshCWA(){
+  const key = state.cwaKey;
+  const body = $('#cwaBody');
+  if (!key){
+    body.className = 'cwa-empty';
+    body.innerHTML = `<span>尚未設定授權碼。</span><button class="btn" type="button" onclick="openSettings()">設定授權碼</button>`;
+    $('#warnBox').classList.remove('show');
+    return;
+  }
+  const base = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/';
+  try {
+    const [fc, wn] = await Promise.all([
+      getJSON(`${base}F-C0032-001?Authorization=${encodeURIComponent(key)}&locationName=${encodeURIComponent('桃園市')}`),
+      getJSON(`${base}W-C0033-001?Authorization=${encodeURIComponent(key)}&locationName=${encodeURIComponent('桃園市')}`).catch(() => null),
+    ]);
+    const loc = fc.records.location[0];
+    const el = {}; loc.weatherElement.forEach(e => el[e.elementName] = e.time);
+    const periods = el.Wx.map((t, i) => ({
+      start: t.startTime, end: t.endTime, wx: t.parameter.parameterName,
+      pop: el.PoP[i].parameter.parameterName, minT: el.MinT[i].parameter.parameterName, maxT: el.MaxT[i].parameter.parameterName, ci: el.CI[i].parameter.parameterName,
+    }));
+    const whenText = (s, e) => {
+      const sd = s.slice(5,10).replace('-', '/').replace(/^0/, ''), sh = parseInt(s.slice(11,13)), eh = parseInt(e.slice(11,13));
+      const seg = sh === 6 ? '白天' : sh === 18 ? '晚上' : `${sh} 時起`;
+      return `${sd} ${seg}（${sh}–${eh === 0 ? 24 : eh} 時）`;
+    };
+    body.className = '';
+    body.innerHTML = `<div class="periods">` + periods.map(p => `<div class="period"><div class="when">${esc(whenText(p.start, p.end))}</div><div class="wx">${esc(p.wx)}</div><div class="rng">${esc(p.minT)}<small>°</small> – ${esc(p.maxT)}<small>°</small></div><div class="pop">降雨機率 ${esc(p.pop)}% · ${esc(p.ci)}</div></div>`).join('') + `</div><p class="air-note">資料來源：中央氣象署 F-C0032-001，桃園市。</p>`;
+    // warnings
+    const wb = $('#warnBox');
+    const wloc = wn && wn.records && wn.records.location && wn.records.location[0];
+    const hazards = wloc ? (wloc.hazardConditions?.hazards || []) : [];
+    if (hazards.length){
+      wb.innerHTML = hazards.map(h => `<strong>${esc(h.info?.phenomena || '特報')}${h.info?.significance ? esc(h.info.significance) : ''}</strong>　${esc(h.validTime?.startTime || '')} 起，至 ${esc(h.validTime?.endTime || '')}。`).join('<br>');
+      wb.classList.add('show');
+    } else wb.classList.remove('show');
+  } catch (e) {
+    body.className = '';
+    body.innerHTML = `<div class="cwa-err">氣象署資料取不到（${esc(e.message)}）。可能是授權碼錯誤，或瀏覽器擋下了跨網站請求。請到設定重新輸入授權碼，或改用本機伺服器開啟這個頁面。</div>`;
+  }
+}
+
+/* ===================== interactions ===================== */
+function selectDistrict(id){
+  const d = DISTRICTS.find(x => x.id === id); if (!d) return;
+  state.district = d;
+  saveStore();
+  $('#placeSel').value = d.id;
+  map3d.draw();
+  refresh();
+  if (window.scrollY > 200) window.scrollTo({top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+}
+function openSettings(){
+  const sel = $('#selDistrict');
+  sel.innerHTML = DISTRICTS.map(d => `<option value="${d.id}" ${d.id === state.district.id ? 'selected' : ''}>${d.name}</option>`).join('');
+  $('#cwaKey').value = state.cwaKey;
+  $('#dlg').showModal();
+}
+$('#btnSettings').addEventListener('click', openSettings);
+$('#btnCwaSetup').addEventListener('click', openSettings);
+$('#dlgCancel').addEventListener('click', () => $('#dlg').close());
+$('#dlgSave').addEventListener('click', () => {
+  const id = $('#selDistrict').value;
+  const key = $('#cwaKey').value.trim();
+  const keyChanged = key !== state.cwaKey;
+  state.cwaKey = key;
+  $('#dlg').close();
+  if (id !== state.district.id) selectDistrict(id);
+  else { saveStore(); if (keyChanged) refreshCWA(); }
+});
+$('#dlgClear').addEventListener('click', () => {
+  try { localStorage.removeItem(STORE); } catch (e) {}
+  location.reload();
+});
+$('#btnRefresh').addEventListener('click', () => refresh());
+$('#btnTheme').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  saveStore();
+  render();
+});
+$('#placeSel').innerHTML = DISTRICTS.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+$('#placeSel').addEventListener('change', (e) => selectDistrict(e.target.value));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!document.documentElement.dataset.theme) render(); });
+let resizeT = null;
+window.addEventListener('resize', () => { hzHover(-1); histHover(-1); clearTimeout(resizeT); resizeT = setTimeout(() => { if (state.data){ renderHorizon(state.data.main); renderHistory(state.data.hist); } }, 150); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden && state.data && Date.now() - state.data.fetchedAt > REFRESH_MS) refresh(); });
+
+/* ===================== boot ===================== */
+loadStore();
+if (state.data){
+  if (state.data.districtId && state.data.districtId !== state.district.id){
+    state.district = DISTRICTS.find(d => d.id === state.data.districtId) || state.district;
+  }
+  try { render(); } catch (e) { console.error(e); }
+}
+refresh();
+state.timer = setInterval(refresh, REFRESH_MS);
+state.tickTimer = setInterval(tickStatus, 30 * 1000);
+</script>
+</body>
+</html>
