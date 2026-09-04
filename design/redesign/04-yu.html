@@ -1,0 +1,203 @@
+<title>桃園的雨</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F7F9FB; --ink:#173A5E; --ink2:#3A5A7C; --muted:#6F86A0; --rule:#D3DEE9;
+  --t1:#E3ECF4; --t2:#BFD2E5; --t3:#8FB0CF; --t4:#5A87B3; --t5:#2E5E8E;
+  --kai:"LXGW WenKai TC","BiauKai","DFKai-SB","Noto Sans TC",serif;
+  --tc:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0A1520; --ink:#D6E4F2; --ink2:#AFC5DA; --muted:#7E96AE; --rule:#1F3347;
+  --t1:#142536; --t2:#1E3A55; --t3:#2C5478; --t4:#4A7BA6; --t5:#7FAAD3;
+}}
+:root[data-theme="dark"]{
+  --paper:#0A1520; --ink:#D6E4F2; --ink2:#AFC5DA; --muted:#7E96AE; --rule:#1F3347;
+  --t1:#142536; --t2:#1E3A55; --t3:#2C5478; --t4:#4A7BA6; --t5:#7FAAD3;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--tc);font-size:16px;line-height:1.7}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--kai);font-weight:400;line-height:1.3;text-wrap:balance}
+a{color:var(--ink);text-decoration-color:var(--t3)}a:hover{color:var(--t5)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+svg text{font-family:var(--mono)}
+svg text.tc{font-family:var(--tc)}
+.wrap{max-width:1000px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+
+.mast{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:30px 0 10px;border-bottom:1px solid var(--ink)}
+.mast h1{font-size:30px;letter-spacing:.12em}
+.mast .when{font-size:14px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.mast .demo{border:1px solid var(--rule);padding:0 8px;letter-spacing:.08em;font-size:12px}
+
+.q{padding:40px 0 8px}
+.q h2{font-size:clamp(34px,5vw,54px);letter-spacing:.06em}
+.q p.a{font-size:clamp(19px,2.4vw,24px);line-height:1.6;margin-top:10px;max-width:30em;text-wrap:pretty}
+.q p.a b{font-family:var(--mono);font-weight:500}
+.hyeto{margin-top:18px}
+.hyeto svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:14px;height:10px;background:var(--t5);vertical-align:-1px;margin-right:6px}
+.legend i.p{background:none;border-top:1.5px dashed var(--ink2);height:0;vertical-align:3px}
+
+.now{display:flex;flex-wrap:wrap;gap:8px 32px;align-items:baseline;padding:30px 0 0;margin-top:26px;border-top:1px solid var(--rule);font-size:16px;color:var(--ink2)}
+.now .t{font-family:var(--mono);font-size:44px;font-weight:500;color:var(--ink);line-height:1}
+.now .t sup{font-size:.45em;vertical-align:top}
+.now b{font-family:var(--mono);font-weight:500;color:var(--ink)}
+
+.sec{padding:48px 0 0}
+.sec-h{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.sec-h h2{font-size:28px;letter-spacing:.08em}
+.sec-h p{color:var(--muted);font-size:15px}
+
+.mapwrap{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:20px 40px;align-items:start}
+@media (max-width:760px){.mapwrap{grid-template-columns:1fr}}
+.mapwrap svg{width:100%;height:auto;display:block;max-width:520px}
+.steps{display:flex;flex-direction:column;gap:14px;font-size:14px;color:var(--ink2)}
+.steps .sw{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;height:14px}
+.steps .lab{display:grid;grid-template-columns:repeat(5,1fr);text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.steps ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.steps li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+.steps li b{font-family:var(--mono);font-weight:500;color:var(--ink)}
+
+.week{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;gap:10px 18px;align-items:center;font-size:16px}
+.week .hd{font-size:12px;color:var(--muted);letter-spacing:.08em;border-bottom:1px solid var(--rule);padding-bottom:6px}
+.week .d{font-family:var(--mono);color:var(--ink2)}
+.week .d b{font-family:var(--tc);font-weight:500;color:var(--ink);margin-left:6px}
+.week .w{color:var(--ink2);white-space:nowrap}
+.week .bar{height:18px;background:var(--t1);position:relative;min-width:60px}
+.week .bar i{position:absolute;left:0;top:0;bottom:0}
+.week .p,.week .mm{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.week .mm{color:var(--muted)}
+@media (max-width:560px){.week{grid-template-columns:auto minmax(0,1fr) auto;gap:8px 12px}.week .w,.week .mm,.week .hd.w,.week .hd.mm{display:none}}
+
+.hist svg{width:100%;height:auto;display:block}
+.pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px 60px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 18px;font-size:15px}
+dt{color:var(--muted)}dd{margin:0;font-family:var(--mono);font-size:16px}
+dd small{font-family:var(--tc);color:var(--ink2);font-size:13px;margin-left:6px}
+
+footer{margin-top:56px;padding:18px 0 40px;border-top:1px solid var(--ink);color:var(--muted);font-size:13px;display:flex;flex-direction:column;gap:4px}
+:focus-visible{outline:2px solid var(--t4);outline-offset:3px}
+@media (max-width:640px){svg text{font-size:28px}svg text.ax{display:none}#map text{font-size:20px}#map text.big{font-size:28px}}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <h1>桃園的雨</h1>
+  <div class="when"><span>2026 年 9 月 4 日 星期四 15:20</span><span>桃園區</span><span class="demo">示範資料</span></div>
+</header>
+
+<section class="q" aria-labelledby="h-q">
+  <h2 id="h-q">會不會下雨？</h2>
+  <p class="a">會。<b>17</b> 點前後開始下雷陣雨，兩小時約 <b>4</b> 毫米，<b>20</b> 點後停。夜裡與明天早上都是乾的，明天下午 <b>13</b> 點起再來一次。</p>
+  <div class="hyeto">
+    <svg id="hyeto" viewBox="0 0 1000 300" role="img" aria-label="未來 24 小時每小時雨量與降雨機率"></svg>
+    <div class="legend"><span><i></i>每小時雨量（mm）</span><span><i class="p"></i>降雨機率（%）</span></div>
+  </div>
+  <div class="now">
+    <span class="t num">31.4<sup>°</sup></span><span>多雲，體感 <b>36°</b></span><span>濕度 <b>68%</b></span><span>雲量 <b>55%</b></span><span>東北風 <b>14</b> km/h</span><span>氣壓 <b>1006</b> hPa</span>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="h-map">
+  <div class="sec-h"><h2 id="h-map">現在誰在下雨</h2><p>顏色深淺是未來三小時的降雨機率；數字是此刻的每小時雨量</p></div>
+  <div class="mapwrap">
+    <svg id="map" viewBox="0 0 600 712" role="img" aria-label="桃園市十三區降雨機率地圖"></svg>
+    <div class="steps">
+      <div>
+        <div class="sw" aria-hidden="true"><i style="background:var(--t1)"></i><i style="background:var(--t2)"></i><i style="background:var(--t3)"></i><i style="background:var(--t4)"></i><i style="background:var(--t5)"></i></div>
+        <div class="lab"><span>0–19%</span><span>20–39</span><span>40–59</span><span>60–79</span><span>80+</span></div>
+      </div>
+      <ul id="raining" aria-label="正在下雨的區"></ul>
+      <p>沿海的觀音、新屋、大園幾乎不會下；雨從復興的山區往大溪、龍潭擴，再到台地。</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="h-week">
+  <div class="sec-h"><h2 id="h-week">這一週的雨</h2><p>橫條長度是當天最高降雨機率</p></div>
+  <div class="week" id="week"></div>
+</section>
+
+<section class="sec hist" aria-labelledby="h-hist">
+  <div class="sec-h"><h2 id="h-hist">過去三十天下了多少</h2><p>桃園區每日雨量；合計 <span class="num" id="histSum"></span> 毫米</p></div>
+  <svg id="hist" viewBox="0 0 1000 200" role="img" aria-label="最近三十天每日雨量"></svg>
+</section>
+
+<section class="sec" aria-labelledby="h-more">
+  <div class="pair">
+    <div>
+      <div class="sec-h"><h2 id="h-more">太陽</h2></div>
+      <dl><dt>日出</dt><dd>05:36</dd><dt>日落</dt><dd>18:12</dd><dt>日照</dt><dd>12h 36m</dd><dt>最高紫外線</dt><dd>9<small>13 點</small></dd></dl>
+    </div>
+    <div>
+      <div class="sec-h"><h2>空氣</h2></div>
+      <dl><dt>空氣品質指標</dt><dd>52<small>普通</small></dd><dt>PM2.5</dt><dd>14<small>µg/m³</small></dd><dt>臭氧</dt><dd>62<small>µg/m³</small></dd></dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>示範資料：以上數字為 2026-09-04 15:20 的手填示範，非即時。正式版全部數字來自 Open-Meteo（可選中央氣象署），每 10 分鐘更新。</div>
+  <div>十三區座標取各區公所附近；區界取自內政部鄉鎮市區界線。整頁只有一個顏色：雨的深淺。</div>
+</footer>
+</div>
+
+<script>
+const DATA = {"now":{"t":31.4,"feel":36.2,"code":2,"text":"多雲","hum":68,"wind":14,"gust":26,"wdir":"東北","pres":1006,"cloud":55,"uv":7,"rain":0.0,"time":"15:20","date":"2026年9月4日 星期四","term":"白露前三日","sunrise":"05:36","sunset":"18:12","daylen":"12 小時 36 分","uvmax":9},"hours":[15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],"temp":[31.4,31.0,29.6,28.1,27.3,26.9,26.6,26.3,26.0,25.8,25.6,25.4,25.2,25.0,24.9,25.3,26.6,28.0,29.4,30.5,31.3,31.9,32.3,32.1],"pop":[20,35,60,55,30,15,10,5,5,5,5,5,5,5,5,5,5,5,10,10,15,20,30,40],"rain":[0,0.2,2.4,1.1,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.4,1.0],"cloud":[55,70,90,85,60,40,30,25,20,20,15,15,15,20,25,30,35,40,45,50,55,65,75,80],"code":[2,2,95,80,3,2,1,1,0,0,0,0,0,0,0,1,1,1,2,2,2,2,3,80],"uv":[7,5,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1,3,5,7,9,10,9,7],"hum":[68,70,80,84,82,80,80,81,82,83,84,85,86,87,87,86,82,76,71,67,64,62,61,63],"wind":[14,15,22,18,12,10,9,8,8,7,7,6,6,6,7,8,9,11,13,14,15,16,17,18],"dist":{"id":["taoyuan","zhongli","pingzhen","bade","yangmei","luzhu","daxi","longtan","guishan","dayuan","guanyin","xinwu","fuxing"],"name":["桃園區","中壢區","平鎮區","八德區","楊梅區","蘆竹區","大溪區","龍潭區","龜山區","大園區","觀音區","新屋區","復興區"],"t":[31.4,31.0,30.8,31.2,30.1,31.6,30.6,29.7,31.0,31.3,30.9,30.7,25.4],"code":[2,2,2,2,2,1,3,3,2,1,0,0,95],"hum":[68,69,70,69,72,66,74,76,68,65,64,65,92],"wind":[14,15,13,12,16,18,9,10,13,21,22,20,6],"elev":[107,137,148,133,172,52,118,238,88,25,18,22,412],"pop":[30,30,35,40,25,20,55,50,35,10,5,5,80],"rain":[0,0,0,0,0,0,0.2,0.4,0,0,0,0,3.2],"lon":[121.301,121.225,121.218,121.2848,121.1458,121.292,121.2868,121.216,121.338,121.205,121.078,121.104,121.35],"lat":[24.9936,24.9575,24.9456,24.9285,24.9126,25.045,24.8806,24.8636,25.0225,25.0644,25.033,24.9727,24.72],"d":["M381.1 126.1 L407.1 134.9 L415.9 162.6 L402.8 184.6 L413.1 195.7 L405.8 205.8 L374.1 198.9 L370.3 210.3 L356.3 200.7 L335.7 203.1 L331.2 185.4 L348.1 178.8 L355.2 167.6 L344.7 140.7Z","M217.6 134.9 L233.7 133.5 L254.2 145.7 L262.6 135.1 L277.7 144.4 L291.1 142.5 L289.0 161.6 L317.1 155.2 L331.2 185.4 L335.7 203.1 L339.4 233.1 L329.7 257.9 L313.2 265.1 L295.2 256.6 L286.4 230.9 L255.5 223.8 L251.1 207.4 L237.1 207.9 L234.7 221.4 L221.7 223.3 L205.1 213.7 L224.7 184.3 L216.3 150.7Z","M234.7 221.4 L237.1 207.9 L251.1 207.4 L255.5 223.8 L286.4 230.9 L295.2 256.6 L313.2 265.1 L329.7 257.9 L322.0 269.6 L323.5 286.0 L319.0 315.3 L301.8 314.3 L295.2 305.0 L256.0 313.0 L243.7 310.3 L248.5 260.8Z","M405.8 205.8 L412.7 211.3 L410.7 234.1 L396.6 247.8 L376.2 266.3 L352.4 271.4 L346.2 261.3 L323.5 286.0 L322.0 269.6 L329.7 257.9 L339.4 233.1 L335.7 203.1 L356.3 200.7 L370.3 210.3 L374.1 198.9Z","M221.7 223.3 L234.7 221.4 L248.5 260.8 L243.7 310.3 L232.0 321.1 L233.0 333.0 L212.7 329.1 L209.9 322.3 L170.6 322.8 L154.7 315.3 L155.4 300.3 L134.5 305.8 L97.1 288.1 L96.4 250.3 L132.2 224.6 L152.4 237.8 L176.9 228.8 L200.5 237.6Z","M359.1 18.2 L358.0 27.4 L381.3 44.3 L407.1 49.9 L422.7 61.0 L428.1 75.0 L442.2 84.9 L412.2 90.7 L403.9 99.4 L373.4 108.4 L381.1 126.1 L344.7 140.7 L355.2 167.6 L348.1 178.8 L331.2 185.4 L317.1 155.2 L306.4 139.4 L304.4 114.2 L314.5 97.7 L334.2 83.5 L346.2 65.7 L325.2 39.2 L317.7 14.4 L331.9 12.0Z","M396.6 247.8 L405.1 257.1 L424.5 260.8 L398.7 276.4 L408.6 285.4 L401.8 297.1 L427.3 306.8 L431.7 338.1 L440.7 350.5 L419.9 368.0 L411.0 397.1 L400.5 402.2 L397.4 421.5 L362.1 405.0 L311.7 414.5 L312.8 408.0 L340.4 363.0 L330.1 342.6 L317.3 350.8 L319.0 315.3 L323.5 286.0 L346.2 261.3 L352.4 271.4 L376.2 266.3Z","M243.7 310.3 L256.0 313.0 L295.2 305.0 L301.8 314.3 L319.0 315.3 L317.3 350.8 L330.1 342.6 L340.4 363.0 L312.8 408.0 L311.7 414.5 L286.6 426.5 L281.5 409.8 L270.3 417.0 L265.4 403.5 L230.9 390.2 L233.9 384.7 L203.3 368.8 L216.6 349.2 L212.7 329.1 L233.0 333.0 L232.0 321.1Z","M442.2 84.9 L471.6 85.1 L498.2 110.2 L492.8 130.1 L508.9 143.9 L484.7 153.1 L496.7 169.8 L458.3 198.6 L413.1 195.7 L402.8 184.6 L415.9 162.6 L407.1 134.9 L381.1 126.1 L373.4 108.4 L403.9 99.4 L412.2 90.7Z","M317.7 14.4 L325.2 39.2 L346.2 65.7 L334.2 83.5 L314.5 97.7 L304.4 114.2 L306.4 139.4 L317.1 155.2 L289.0 161.6 L291.1 142.5 L277.7 144.4 L262.6 135.1 L254.2 145.7 L233.7 133.5 L217.6 134.9 L223.8 112.1 L209.7 93.5 L209.4 64.2 L230.4 58.4 L275.9 29.0 L311.3 20.7Z","M209.4 64.2 L209.7 93.5 L223.8 112.1 L217.6 134.9 L216.3 150.7 L224.7 184.3 L205.1 213.7 L187.2 204.1 L177.5 171.1 L157.0 185.6 L150.5 172.9 L119.9 159.7 L108.4 166.4 L99.9 154.4 L68.8 146.9 L54.9 159.4 L86.4 117.1 L126.1 101.5 L134.7 89.6 L168.3 72.7Z","M54.9 159.4 L68.8 146.9 L99.9 154.4 L108.4 166.4 L119.9 159.7 L150.5 172.9 L157.0 185.6 L177.5 171.1 L187.2 204.1 L221.7 223.3 L200.5 237.6 L176.9 228.8 L152.4 237.8 L132.2 224.6 L96.4 250.3 L72.3 237.8 L50.8 245.4 L36.5 237.8 L31.9 245.8 L12.0 246.6 L42.9 201.8 L40.6 185.1Z","M419.9 368.0 L442.2 369.3 L463.2 381.0 L487.0 369.3 L512.8 380.0 L537.6 410.5 L539.4 431.8 L553.5 437.5 L549.4 447.9 L522.0 474.7 L536.1 512.2 L553.2 546.9 L581.4 559.4 L588.0 587.9 L564.4 588.7 L550.3 608.3 L554.8 617.3 L541.9 637.9 L527.4 674.8 L509.7 678.1 L498.2 693.6 L480.2 700.1 L452.1 679.3 L446.8 660.4 L454.7 642.1 L439.1 625.3 L440.7 597.7 L424.5 592.4 L423.2 580.5 L399.2 556.9 L377.7 558.9 L386.9 528.7 L376.7 514.9 L387.2 483.7 L370.0 470.4 L331.7 449.2 L332.9 438.7 L316.6 429.2 L312.0 414.5 L362.1 405.0 L397.4 421.5 L400.5 402.2 L411.0 397.1Z"],"cx":[377.6,278.2,277.0,367.4,178.6,357.7,373.5,275.5,445.3,275.7,163.5,108.2,466.0],"cy":[168.8,194.1,270.1,234.9,273.8,91.6,337.4,360.6,138.2,85.8,133.6,203.3,515.2]},"week":[{"d":"9/4","w":"四","lo":25.2,"hi":32.3,"pop":60,"code":95,"text":"午後雷陣雨"},{"d":"9/5","w":"五","lo":25.0,"hi":33.1,"pop":50,"code":95,"text":"午後雷陣雨"},{"d":"9/6","w":"六","lo":25.6,"hi":33.4,"pop":30,"code":2,"text":"多雲"},{"d":"9/7","w":"日","lo":25.9,"hi":34.0,"pop":20,"code":1,"text":"晴時多雲"},{"d":"9/8","w":"一","lo":26.1,"hi":34.2,"pop":10,"code":0,"text":"晴"},{"d":"9/9","w":"二","lo":25.8,"hi":33.0,"pop":40,"code":80,"text":"多雲短暫雨"},{"d":"9/10","w":"三","lo":25.1,"hi":31.2,"pop":70,"code":61,"text":"陣雨"}],"air":{"aqi":52,"cat":"普通","pm25":14,"pm10":28,"o3":62,"no2":18,"pm25h":[9,9,10,11,12,13,15,17,18,18,17,16,15,14,13,12,12,13,14,15,15,14,14,14]},"hist":[{"d":"08/06","lo":26.6,"hi":34.4,"r":0},{"d":"08/07","lo":25.8,"hi":35,"r":0},{"d":"08/08","lo":27,"hi":35,"r":0},{"d":"08/09","lo":26.6,"hi":34,"r":3.2},{"d":"08/10","lo":26.3,"hi":33,"r":12.5},{"d":"08/11","lo":25,"hi":30.7,"r":28.4},{"d":"08/12","lo":24.8,"hi":30,"r":41.0},{"d":"08/13","lo":25.3,"hi":32,"r":6.1},{"d":"08/14","lo":25.8,"hi":33,"r":0},{"d":"08/15","lo":26,"hi":34.4,"r":0},{"d":"08/16","lo":26,"hi":34.7,"r":0},{"d":"08/17","lo":27,"hi":35.4,"r":0.4},{"d":"08/18","lo":26,"hi":34.4,"r":8.7},{"d":"08/19","lo":26.6,"hi":32.7,"r":15.2},{"d":"08/20","lo":26.3,"hi":33,"r":2.0},{"d":"08/21","lo":26.6,"hi":34.4,"r":0},{"d":"08/22","lo":26,"hi":35.4,"r":0},{"d":"08/23","lo":27.6,"hi":36,"r":0},{"d":"08/24","lo":27,"hi":35,"r":0},{"d":"08/25","lo":26.3,"hi":33.7,"r":5.5},{"d":"08/26","lo":25.8,"hi":33.7,"r":19.8},{"d":"08/27","lo":24.8,"hi":31.7,"r":7.3},{"d":"08/28","lo":26.6,"hi":33.7,"r":0},{"d":"08/29","lo":26.3,"hi":34.4,"r":0},{"d":"08/30","lo":26.3,"hi":34,"r":1.2},{"d":"08/31","lo":26.6,"hi":32.7,"r":10.6},{"d":"09/01","lo":25.6,"hi":31.7,"r":22.1},{"d":"09/02","lo":25.6,"hi":32,"r":3.0},{"d":"09/03","lo":25,"hi":32.7,"r":0},{"d":"09/04","lo":25.3,"hi":32.7,"r":4.6}]};
+(function(){
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const tints = ['--t1','--t2','--t3','--t4','--t5'].map(css);
+  const tint = p => tints[Math.min(4, Math.floor(p/20))];
+
+  // hyetograph
+  const W=1000,H=300,l=40,r=40,top=30,bot=46, k=DATA.hours.length;
+  const slot=(W-l-r)/k, x=i=>l+i*slot;
+  const ry = v => H-bot - (v/3)*(H-bot-top);
+  const py = p => H-bot - (p/100)*(H-bot-top);
+  let s='';
+  [1,2,3].forEach(v=>{ s+=`<line x1="${l}" x2="${W-r}" y1="${ry(v)}" y2="${ry(v)}" stroke="${css('--rule')}"/><text class="ax" x="${l-8}" y="${ry(v)+4}" text-anchor="end" font-size="12" fill="${css('--muted')}">${v}</text>`; });
+  s+=`<text class="ax" x="${l-8}" y="${top-12}" text-anchor="end" font-size="11" fill="${css('--muted')}">mm</text>`;
+  [50,100].forEach(p=>{ s+=`<text class="ax" x="${W-r+8}" y="${py(p)+4}" font-size="12" fill="${css('--muted')}">${p}%</text>`; });
+  // probability as stepped dashed line
+  let d='';
+  for (let i=0;i<k;i++){ d += (i?` L${x(i)} ${py(DATA.pop[i])}`:`M${x(i)} ${py(DATA.pop[i])}`) + ` L${x(i)+slot} ${py(DATA.pop[i])}`; }
+  s+=`<path d="${d}" fill="none" stroke="${css('--ink2')}" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  for (let i=0;i<k;i++){
+    const v=DATA.rain[i];
+    if (v>0) s+=`<rect x="${x(i)+3}" y="${ry(v)}" width="${slot-6}" height="${H-bot-ry(v)}" fill="${css('--t5')}"/><text class="big" x="${x(i)+slot/2}" y="${ry(v)-10}" text-anchor="middle" font-size="12" fill="${css('--ink')}">${v.toFixed(1)}</text>`;
+    if (i%3===0) s+=`<text x="${x(i)+slot/2}" y="${H-bot+20}" text-anchor="middle" font-size="13" fill="${css('--muted')}">${String(DATA.hours[i]).padStart(2,'0')}</text>`;
+  }
+  s+=`<line x1="${l}" x2="${W-r}" y1="${H-bot}" y2="${H-bot}" stroke="${css('--ink')}"/>`;
+  s+=`<text x="${x(0)+slot/2}" y="${H-bot+38}" text-anchor="middle" font-size="11" fill="${css('--ink')}">現在</text>`;
+  document.getElementById('hyeto').innerHTML=s;
+
+  // map
+  const D=DATA.dist,n=D.id.length; let m='';
+  for (let i=0;i<n;i++) m+=`<path d="${D.d[i]}" fill="${tint(D.pop[i])}" stroke="${css('--paper')}" stroke-width="1.5" stroke-linejoin="round"/>`;
+  for (let i=0;i<n;i++){
+    const dark = D.pop[i]>=60;
+    const col = dark ? css('--paper') : css('--ink');
+    m+=`<text x="${D.cx[i]}" y="${D.cy[i]+(D.rain[i]>0?-2:6)}" text-anchor="middle" font-size="16" fill="${col}" class="tc">${D.name[i].replace('區','')}</text>`;
+    if (D.rain[i]>0) m+=`<text class="big" x="${D.cx[i]}" y="${D.cy[i]+22}" text-anchor="middle" font-size="22" font-weight="500" fill="${col}">${D.rain[i].toFixed(1)}</text>`;
+  }
+  document.getElementById('map').innerHTML=m;
+  document.getElementById('raining').innerHTML = D.id.map((_,i)=>i).filter(i=>D.rain[i]>0).sort((a,b)=>D.rain[b]-D.rain[a]).map(i=>`<li><span>${D.name[i]}</span><b>${D.rain[i].toFixed(1)} mm/h</b></li>`).join('');
+
+  // week
+  const sum = [4.2,3.1,0.4,0,0,2.2,9.6];
+  document.getElementById('week').innerHTML = '<div class="hd">日期</div><div class="hd w">天氣</div><div class="hd">最高雨機率</div><div class="hd p">%</div><div class="hd mm">預估 mm</div>' + DATA.week.map((w,i)=>`<div class="d">${w.d}<b>${w.w}</b></div><div class="w">${w.text}</div><div class="bar"><i style="width:${w.pop}%;background:${tint(w.pop)}"></i></div><div class="p">${w.pop}</div><div class="mm">${sum[i]?sum[i].toFixed(1):'·'}</div>`).join('');
+
+  // history rain only
+  const Hh=DATA.hist, kk=Hh.length, HW=1000, HH=200, hl=36, hr=12, ht=16, hb=36;
+  const hx=i=>hl+(i+0.5)*((HW-hl-hr)/kk), hy=v=>HH-hb-(v/45)*(HH-hb-ht);
+  let h=''; [20,40].forEach(v=>{ h+=`<line x1="${hl}" x2="${HW-hr}" y1="${hy(v)}" y2="${hy(v)}" stroke="${css('--rule')}"/><text class="ax" x="${hl-8}" y="${hy(v)+4}" text-anchor="end" font-size="12" fill="${css('--muted')}">${v}</text>`; });
+  const bw=(HW-hl-hr)/kk*0.6; let total=0;
+  Hh.forEach((d,i)=>{ total+=d.r; if(d.r>0) h+=`<rect x="${hx(i)-bw/2}" y="${hy(d.r)}" width="${bw}" height="${HH-hb-hy(d.r)}" fill="${tint(Math.min(99,d.r*2.2))}"/>`; if(i%5===0||i===kk-1) h+=`<text x="${hx(i)}" y="${HH-hb+18}" text-anchor="middle" font-size="12" fill="${css('--muted')}">${d.d}</text>`; });
+  h+=`<line x1="${hl}" x2="${HW-hr}" y1="${HH-hb}" y2="${HH-hb}" stroke="${css('--ink')}"/>`;
+  document.getElementById('hist').innerHTML=h;
+  document.getElementById('histSum').textContent=total.toFixed(0);
+})();
+</script>
