@@ -1,0 +1,255 @@
+<title>粗暴天氣</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700&family=Noto+Sans+TC:wght@500;700;900&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#ffde59;color:#000;font-family:"Space Grotesk","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;font-weight:500;line-height:1.35;overflow-x:hidden}
+a{color:#000}
+h1,h2,h3,p{margin:0}
+.disp{font-family:"Archivo Black","Noto Sans TC","PingFang TC",system-ui,sans-serif;text-transform:uppercase;letter-spacing:-.02em}
+.blk{border:3px solid #000;box-shadow:6px 6px 0 #000;background:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(14px,3vw,32px)}
+.pad{padding:clamp(16px,2.5vw,28px)}
+
+/* marquee */
+.band{background:#fff;border-top:3px solid #000;border-bottom:3px solid #000;overflow:hidden;white-space:nowrap}
+.band-inner{display:inline-flex;gap:0;padding:10px 0;will-change:transform;animation:marq 22s linear infinite}
+.band span{font-family:"Archivo Black","Noto Sans TC",system-ui,sans-serif;font-size:clamp(15px,2vw,22px);text-transform:uppercase;letter-spacing:.06em;padding:0 22px}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* header */
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:22px 0}
+.logo{display:flex;align-items:center;gap:12px}
+.logo .mark{width:52px;height:52px;background:#ff6b6b;border:3px solid #000;box-shadow:4px 4px 0 #000;display:grid;place-items:center}
+.logo .mark svg{width:30px;height:30px}
+.logo h1{font-size:clamp(26px,4vw,40px);line-height:1}
+.logo .tag{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+nav{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:3px solid #000;box-shadow:5px 5px 0 #000;background:#fff;padding:10px 18px;font:inherit;font-weight:700;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;transition:transform .1s,box-shadow .1s}
+.btn.teal{background:#4ecdc4}.btn.lav{background:#a29bfe}.btn.coral{background:#ff6b6b}.btn.yel{background:#ffe66d}
+.btn:hover,.btn:active{transform:translate(5px,5px);box-shadow:0 0 0 #000}
+.btn:focus-visible{outline:3px dashed #000;outline-offset:3px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;margin:14px 0 40px}
+.hero-main{position:relative;background:#fff;overflow:visible}
+.temp{font-size:clamp(120px,20vw,220px);line-height:.85;letter-spacing:-.06em;display:inline-block}
+.temp small{font-size:.4em;vertical-align:top;letter-spacing:0}
+.cond{font-size:clamp(24px,3.4vw,40px);font-weight:900;margin-top:16px;font-family:"Noto Sans TC","Space Grotesk",sans-serif}
+.meta{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:8px}
+.sticker{position:absolute;font-family:"Archivo Black",system-ui,sans-serif;border:3px solid #000;box-shadow:4px 4px 0 #000;padding:8px 16px;font-size:clamp(16px,2.4vw,26px);text-transform:uppercase}
+.st-new{top:-22px;right:18px;background:#ff6b6b;transform:rotate(-6deg)}
+.st-feel{bottom:-18px;left:22px;background:#a29bfe;transform:rotate(3deg);font-family:"Noto Sans TC","Archivo Black",sans-serif;font-weight:900}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.stat{padding:18px;display:flex;flex-direction:column;gap:6px}
+.stat .lab{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+.stat .val{font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(28px,4vw,44px);line-height:1;letter-spacing:-.03em}
+.stat .val small{font-size:.45em;font-family:"Space Grotesk",sans-serif;font-weight:700}
+.stat.c1{background:#4ecdc4}.stat.c2{background:#ffe66d}.stat.c3{background:#a29bfe}.stat.c4{background:#ff6b6b}.stat.c5{background:#fff}.stat.c6{background:#4ecdc4}
+
+/* sections */
+section{margin:0 0 44px}
+.sec-h{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sec-h h2{font-size:clamp(28px,4.5vw,52px);line-height:1;background:#000;color:#ffde59;padding:6px 14px;display:inline-block;transform:rotate(-1deg)}
+.sec-h .sub{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;background:#fff;border:3px solid #000;padding:6px 10px}
+
+/* hourly */
+.hours{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:14px}
+.hr{padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.hr .t{font-weight:700;font-size:13px;letter-spacing:.06em}
+.hr .d{font-family:"Archivo Black",system-ui,sans-serif;font-size:clamp(20px,2.6vw,30px);line-height:1}
+.hr svg{width:34px;height:34px}
+.rain{width:100%;height:78px;border:3px solid #000;background:repeating-linear-gradient(45deg,#fff 0 6px,#000 6px 8px);position:relative;display:flex;align-items:flex-end}
+.rain i{display:block;width:100%;background:#4ecdc4;border-top:3px solid #000}
+.hr .p{font-size:12px;font-weight:700}
+
+/* week */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:14px}
+.day{padding:16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.day .n{font-family:"Archivo Black","Noto Sans TC",sans-serif;font-size:clamp(18px,2.4vw,28px)}
+.day svg{width:48px;height:48px}
+.day .hi{font-family:"Archivo Black",sans-serif;font-size:clamp(28px,3.6vw,44px);line-height:1}
+.day .lo{font-weight:700;font-size:16px}
+.day .w{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:14px;background:#000;color:#fff;padding:2px 8px}
+.day.today{background:#ff6b6b}
+
+/* districts */
+.dist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.d{padding:16px 14px;display:flex;flex-direction:column;gap:4px;min-height:118px;justify-content:space-between}
+.d .name{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:18px}
+.d .v{font-family:"Archivo Black",sans-serif;font-size:44px;line-height:1;letter-spacing:-.04em}
+.d.big{grid-column:span 2;background:#000;color:#ffde59}
+.d.big .v{font-size:72px}
+
+/* stripes section */
+.stripes{background:repeating-linear-gradient(-45deg,#000 0 10px,#ffde59 10px 26px);border:3px solid #000;padding:clamp(16px,3vw,32px)}
+.duo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px}
+.aqi{background:#4ecdc4;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.aqi .n{font-family:"Archivo Black",sans-serif;font-size:clamp(90px,14vw,170px);line-height:.85;letter-spacing:-.06em}
+.aqi .g{font-family:"Noto Sans TC",sans-serif;font-weight:900;font-size:clamp(26px,3.6vw,44px);background:#000;color:#4ecdc4;display:inline-block;padding:4px 14px;align-self:flex-start}
+.aqi .pm{font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.sun{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;background:#fff}
+.sun>div{padding:22px 18px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.sun>div:first-child{border-right:3px solid #000;background:#ffe66d}
+.sun>div:last-child{background:#a29bfe}
+.sun svg{width:44px;height:44px}
+.sun .lab{font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:12px}
+.sun .v{font-family:"Archivo Black",sans-serif;font-size:clamp(34px,5vw,56px);line-height:1;letter-spacing:-.03em}
+.sunbar{margin-top:18px;height:26px;border:3px solid #000;background:#fff;position:relative}
+.sunbar i{position:absolute;top:0;bottom:0;left:23.3%;width:52.8%;background:#ffe66d;border-left:3px solid #000;border-right:3px solid #000}
+.sunbar b{position:absolute;top:-12px;left:63.9%;width:26px;height:26px;border:3px solid #000;background:#ff6b6b;border-radius:50%;transform:translateX(-50%)}
+
+/* footer */
+footer{border-top:3px solid #000;background:#000;color:#ffde59;padding:26px 0 40px;margin-top:20px}
+footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+footer a{color:#ffde59}
+footer .big{font-family:"Archivo Black","Noto Sans TC",sans-serif;font-size:clamp(28px,5vw,64px);line-height:1;margin-bottom:16px;color:#fff}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .hours{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .week{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .duo{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .hours{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .week{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats{grid-template-columns:1fr 1fr}
+  .d.big{grid-column:span 2}
+  .st-new{right:6px;top:-18px}
+}
+@media (prefers-reduced-motion:reduce){
+  .band-inner{animation:none}
+  .btn{transition:none}
+}
+</style>
+
+<div class="band" aria-hidden="true">
+  <div class="band-inner">
+    <span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span>
+    <span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span><span>桃園天氣 ★ 31°C ★ 午後雷陣雨 ★ 濕度 74% ★</span>
+  </div>
+</div>
+
+<div class="wrap">
+<header>
+  <div class="logo">
+    <div class="mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="square"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+    </div>
+    <div>
+      <h1 class="disp">粗暴天氣</h1>
+      <div class="tag">桃園市 · 2026-09-04 週五 · 更新 15:20</div>
+    </div>
+  </div>
+  <nav aria-label="主選單">
+    <button class="btn teal" type="button">現在</button>
+    <button class="btn lav" type="button">十三區</button>
+    <button class="btn coral" type="button">刷新</button>
+  </nav>
+</header>
+
+<section class="hero" aria-labelledby="nowTitle">
+  <div class="blk pad hero-main">
+    <h2 id="nowTitle" class="meta">現在 · 桃園市</h2>
+    <div class="disp temp">31<small>°C</small></div>
+    <p class="cond">多雲，午後雷陣雨</p>
+    <p class="meta">西南風 3.2 m/s · 降雨機率 40%</p>
+    <div class="sticker st-new" aria-hidden="true">New!</div>
+    <div class="sticker st-feel">體感 36°</div>
+  </div>
+  <div class="stats">
+    <div class="blk stat c1"><span class="lab">濕度</span><span class="val">74<small>%</small></span></div>
+    <div class="blk stat c2"><span class="lab">紫外線</span><span class="val">8<small> 過量</small></span></div>
+    <div class="blk stat c3"><span class="lab">風</span><span class="val">3.2<small> m/s SW</small></span></div>
+    <div class="blk stat c4"><span class="lab">降雨機率</span><span class="val">40<small>%</small></span></div>
+    <div class="blk stat c5"><span class="lab">氣壓</span><span class="val">1006<small> hPa</small></span></div>
+    <div class="blk stat c6"><span class="lab">能見度</span><span class="val">12<small> km</small></span></div>
+  </div>
+</section>
+
+<section aria-labelledby="hrTitle">
+  <div class="sec-h"><h2 id="hrTitle" class="disp">逐時</h2><span class="sub">接下來 8 小時</span></div>
+  <div class="hours">
+    <div class="blk hr"><span class="t">16時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="9" cy="9" r="4" fill="#ffe66d"/><path d="M8 20h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 8 20z" fill="#fff"/></svg><span class="d">31°</span><div class="rain"><i style="height:30%"></i></div><span class="p">30%</span></div>
+    <div class="blk hr"><span class="t">17時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 15z" fill="#fff"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/></svg><span class="d">30°</span><div class="rain"><i style="height:55%"></i></div><span class="p">55%</span></div>
+    <div class="blk hr"><span class="t">18時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 14h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 14z" fill="#fff"/><path d="M13 14l-2 4h3l-2 4" fill="#ffe66d"/></svg><span class="d">28°</span><div class="rain"><i style="height:60%"></i></div><span class="p">60%</span></div>
+    <div class="blk hr"><span class="t">19時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 15z" fill="#fff"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/></svg><span class="d">27°</span><div class="rain"><i style="height:40%"></i></div><span class="p">40%</span></div>
+    <div class="blk hr"><span class="t">20時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 17h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 17z" fill="#fff"/></svg><span class="d">27°</span><div class="rain"><i style="height:20%"></i></div><span class="p">20%</span></div>
+    <div class="blk hr"><span class="t">21時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 17h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 17z" fill="#fff"/></svg><span class="d">26°</span><div class="rain"><i style="height:10%"></i></div><span class="p">10%</span></div>
+    <div class="blk hr"><span class="t">22時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M15 3a8 8 0 1 0 6 12 7 7 0 0 1-6-12z" fill="#a29bfe"/></svg><span class="d">26°</span><div class="rain"><i style="height:5%"></i></div><span class="p">5%</span></div>
+    <div class="blk hr"><span class="t">23時</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M15 3a8 8 0 1 0 6 12 7 7 0 0 1-6-12z" fill="#a29bfe"/></svg><span class="d">26°</span><div class="rain"><i style="height:5%"></i></div><span class="p">5%</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="wkTitle">
+  <div class="sec-h"><h2 id="wkTitle" class="disp">未來七天</h2><span class="sub">高 / 低</span></div>
+  <div class="week">
+    <div class="blk day today"><span class="n">週五</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 14h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 14z" fill="#fff"/><path d="M13 14l-2 4h3l-2 4" fill="#ffe66d"/></svg><span class="hi">33°</span><span class="lo">26°</span><span class="w">雷陣雨</span></div>
+    <div class="blk day"><span class="n">週六</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 14h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 14z" fill="#fff"/><path d="M13 14l-2 4h3l-2 4" fill="#ffe66d"/></svg><span class="hi">32°</span><span class="lo">26°</span><span class="w">雷陣雨</span></div>
+    <div class="blk day"><span class="n">週日</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 17h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 17z" fill="#fff"/></svg><span class="hi">31°</span><span class="lo">25°</span><span class="w">多雲</span></div>
+    <div class="blk day"><span class="n">週一</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 15z" fill="#fff"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/></svg><span class="hi">30°</span><span class="lo">25°</span><span class="w">陣雨</span></div>
+    <div class="blk day"><span class="n">週二</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 15h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 15z" fill="#fff"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/></svg><span class="hi">29°</span><span class="lo">25°</span><span class="w">陣雨</span></div>
+    <div class="blk day"><span class="n">週三</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><path d="M7 17h10a4 4 0 0 0 0-8 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 7 17z" fill="#fff"/></svg><span class="hi">31°</span><span class="lo">25°</span><span class="w">多雲</span></div>
+    <div class="blk day"><span class="n">週四</span><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="5" fill="#ffe66d"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span class="hi">32°</span><span class="lo">26°</span><span class="w">晴</span></div>
+  </div>
+</section>
+
+<section aria-labelledby="dTitle">
+  <div class="sec-h"><h2 id="dTitle" class="disp">十三區</h2><span class="sub">現在氣溫</span></div>
+  <div class="dist">
+    <div class="blk d big"><span class="name">桃園區</span><span class="v">31°</span></div>
+    <div class="blk d" style="background:#4ecdc4"><span class="name">中壢區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#ffe66d"><span class="name">平鎮區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#ff6b6b"><span class="name">八德區</span><span class="v">31°</span></div>
+    <div class="blk d" style="background:#a29bfe"><span class="name">楊梅區</span><span class="v">29°</span></div>
+    <div class="blk d" style="background:#fff"><span class="name">蘆竹區</span><span class="v">31°</span></div>
+    <div class="blk d" style="background:#ffe66d"><span class="name">大溪區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#4ecdc4"><span class="name">龜山區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#ff6b6b"><span class="name">大園區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#fff"><span class="name">龍潭區</span><span class="v">29°</span></div>
+    <div class="blk d" style="background:#a29bfe"><span class="name">新屋區</span><span class="v">29°</span></div>
+    <div class="blk d" style="background:#ffe66d"><span class="name">觀音區</span><span class="v">30°</span></div>
+    <div class="blk d" style="background:#4ecdc4"><span class="name">復興區</span><span class="v">25°</span></div>
+  </div>
+</section>
+
+<section aria-label="空氣品質與太陽">
+  <div class="stripes">
+    <div class="duo">
+      <div class="blk pad aqi">
+        <span class="meta">空氣品質 AQI</span>
+        <span class="disp n">42</span>
+        <span class="g">良好</span>
+        <span class="pm">PM2.5 · 11 μg/m³</span>
+      </div>
+      <div class="blk sun">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="square"><path d="M4 18h16M12 4v6M8 8l4-4 4 4"/><path d="M6 18a6 6 0 0 1 12 0" fill="#ff6b6b"/></svg>
+          <span class="lab">日出</span>
+          <span class="v">05:36</span>
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="square"><path d="M4 18h16M12 10V4M8 8l4 4 4-4"/><path d="M6 18a6 6 0 0 1 12 0" fill="#ffe66d"/></svg>
+          <span class="lab">日落</span>
+          <span class="v">18:16</span>
+        </div>
+        <div style="grid-column:span 2;border-top:3px solid #000;background:#fff">
+          <span class="lab">日照 12 小時 40 分 · 現在 15:20</span>
+          <div class="sunbar" style="width:100%"><i></i><b></b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="big">桃園天氣 · 不客氣</div>
+    <div class="row">
+      <span>示範資料，非即時觀測</span>
+      <span>資料來源：<a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a></span>
+      <span>桃園市 · 2026</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,404 @@
+<title>Weather.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#fff;color:#111827;
+  font-family:"Inter","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+a{color:#4f46e5;text-decoration:none}
+h1,h2,h3,p{margin:0}
+.container{max-width:1152px;margin:0 auto;padding:0 24px}
+.text-center{text-align:center}
+.text-gray{color:#6b7280}
+.section{padding:96px 0}
+.section-sm{padding:64px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:13px;font-weight:600;border:1px solid #e0e7ff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:8px;font-weight:600;font-size:15px;cursor:pointer;border:1px solid transparent;transition:all .15s ease;font-family:inherit;line-height:1.2}
+.btn-primary{background:#4f46e5;color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.btn-primary:hover{background:#4338ca;box-shadow:0 10px 15px -3px rgba(79,70,229,.3)}
+.btn-ghost{background:transparent;color:#374151}
+.btn-ghost:hover{background:#f3f4f6}
+.btn-outline{background:#fff;color:#111827;border-color:#d1d5db;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.btn-outline:hover{background:#f9fafb}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.8);backdrop-filter:blur(12px);border-bottom:1px solid #e5e7eb}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px;gap:24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:#111827}
+.logo .mark{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#a855f7);display:grid;place-items:center;box-shadow:0 4px 10px rgba(99,102,241,.35)}
+.logo .mark svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.nav-links{display:flex;gap:28px;font-size:14px;font-weight:500;color:#4b5563}
+.nav-links a{color:#4b5563}.nav-links a:hover{color:#111827}
+.nav-cta{display:flex;gap:8px;align-items:center}
+.hero{padding:96px 0 64px}
+.hero h1{font-size:clamp(40px,7vw,72px);font-weight:800;letter-spacing:-.04em;line-height:1.05;margin:24px 0 8px;text-wrap:balance}
+.gradient-text{background:linear-gradient(90deg,#4f46e5 0%,#9333ea 50%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.tagline{font-size:clamp(20px,3vw,28px);font-weight:600;color:#374151;letter-spacing:-.02em}
+.hero p.sub{max-width:640px;margin:20px auto 0;font-size:18px;color:#6b7280}
+.hero-btns{display:flex;gap:12px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+.trust{margin-top:64px}
+.trust p{font-size:13px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.1em}
+.logos{display:flex;flex-wrap:wrap;justify-content:center;gap:20px 48px;margin-top:20px}
+.logos span{font-size:20px;font-weight:800;color:#d1d5db;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+.logos span i{width:20px;height:20px;border-radius:5px;background:#e5e7eb;display:inline-block}
+.shot{margin:0 auto;max-width:1060px;background:#fff;border-radius:16px;box-shadow:0 25px 50px -12px rgba(0,0,0,.25);border:1px solid #e5e7eb;outline:1px solid rgba(229,231,235,.6);overflow:hidden;position:relative}
+.shot::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.shot-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#f9fafb;border-bottom:1px solid #e5e7eb}
+.shot-bar i{width:12px;height:12px;border-radius:50%;background:#e5e7eb}
+.shot-bar i:nth-child(1){background:#fca5a5}.shot-bar i:nth-child(2){background:#fcd34d}.shot-bar i:nth-child(3){background:#86efac}
+.shot-bar .url{margin-left:12px;flex:1;height:26px;border-radius:6px;background:#fff;border:1px solid #e5e7eb;font-size:12px;color:#9ca3af;display:flex;align-items:center;padding:0 10px}
+.app{padding:24px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.card h3{font-size:14px;font-weight:600;color:#374151;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3 svg{width:16px;height:16px;stroke:#6366f1;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.now{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.now .icon{width:88px;height:88px;border-radius:16px;background:linear-gradient(135deg,#eef2ff,#fae8ff);display:grid;place-items:center;flex:0 0 auto}
+.now .icon svg{width:56px;height:56px}
+.now .temp{font-size:64px;font-weight:800;letter-spacing:-.05em;line-height:1;color:#111827}
+.now .temp small{font-size:22px;font-weight:500;color:#6b7280;vertical-align:top}
+.now .cond{font-size:15px;color:#6b7280;margin-top:6px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.badge{padding:4px 10px;border-radius:6px;background:#f3f4f6;color:#374151;font-size:12px;font-weight:500}
+.badge.indigo{background:#eef2ff;color:#4338ca}
+.badge.amber{background:#fef3c7;color:#92400e}
+.badge.sky{background:#e0f2fe;color:#075985}
+.hours{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.hour{text-align:center;padding:10px 4px;border-radius:8px;background:#f9fafb;border:1px solid #f3f4f6;display:flex;flex-direction:column;gap:4px;align-items:center}
+.hour.now-h{background:#eef2ff;border-color:#c7d2fe}
+.hour .h{font-size:11px;color:#6b7280}
+.hour svg{width:22px;height:22px}
+.hour .t{font-size:14px;font-weight:600}
+.hour .p{font-size:10px;color:#3b82f6;font-weight:500}
+.days{display:flex;flex-direction:column;gap:2px}
+.day{display:grid;grid-template-columns:44px 24px 1fr 80px;align-items:center;gap:10px;padding:8px 6px;border-radius:6px;font-size:13px}
+.day:hover{background:#f9fafb}
+.day .n{font-weight:500}
+.day svg{width:20px;height:20px}
+.day .c{color:#6b7280;font-size:12px}
+.day .hl{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.day .hl span{color:#9ca3af;font-weight:400;margin-left:6px}
+.dist{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+.d{padding:10px 6px;border-radius:8px;background:#f9fafb;border:1px solid #f3f4f6;text-align:center}
+.d .n{font-size:11px;color:#6b7280}
+.d .t{font-size:16px;font-weight:600;letter-spacing:-.02em}
+.aqi{display:flex;align-items:center;gap:16px}
+.aqi .num{font-size:40px;font-weight:800;letter-spacing:-.04em;color:#059669;line-height:1}
+.aqi .st{display:inline-block;padding:2px 8px;border-radius:999px;background:#d1fae5;color:#065f46;font-size:12px;font-weight:600}
+.aqi .meta{font-size:12px;color:#6b7280;margin-top:4px}
+.sun{display:flex;justify-content:space-between;gap:12px}
+.sun div{flex:1;padding:10px;border-radius:8px;background:#f9fafb;text-align:center}
+.sun b{display:block;font-size:18px;font-weight:700}
+.sun span{font-size:11px;color:#6b7280}
+.side{display:flex;flex-direction:column;gap:16px}
+.section-head{max-width:640px;margin:0 auto 56px}
+.section-head h2{font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-top:14px;text-wrap:balance}
+.section-head p{margin-top:16px;font-size:17px;color:#6b7280}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.feature{padding:28px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:box-shadow .2s,transform .2s}
+.feature:hover{box-shadow:0 10px 15px -3px rgba(0,0,0,.08);transform:translateY(-2px)}
+.feature .ic{width:48px;height:48px;border-radius:8px;background:#e0e7ff;display:grid;place-items:center;margin-bottom:18px}
+.feature .ic svg{width:24px;height:24px;stroke:#4f46e5;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feature h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.feature p{font-size:15px;color:#6b7280}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+.plan{padding:32px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);display:flex;flex-direction:column;position:relative}
+.plan.pop{border:2px solid #4f46e5;box-shadow:0 20px 25px -5px rgba(79,70,229,.15)}
+.plan .tag{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#4f46e5;color:#fff;font-size:12px;font-weight:600;padding:4px 14px;border-radius:999px;white-space:nowrap}
+.plan .name{font-size:18px;font-weight:700}
+.plan .desc{font-size:14px;color:#6b7280;margin-top:4px}
+.plan .price{margin:20px 0;font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.plan .price small{font-size:14px;font-weight:500;color:#6b7280;letter-spacing:0}
+.plan ul{list-style:none;margin:0 0 28px;padding:0;display:flex;flex-direction:column;gap:12px;font-size:14px;color:#374151;flex:1}
+.plan li{display:flex;align-items:flex-start;gap:10px}
+.plan li svg{width:18px;height:18px;flex:0 0 auto;stroke:#4f46e5;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.plan .btn{width:100%}
+.testis{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.testi{padding:28px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05);display:flex;flex-direction:column;gap:16px}
+.stars{display:flex;gap:2px}
+.stars svg{width:18px;height:18px;fill:#fbbf24}
+.testi p{font-size:15px;color:#374151;flex:1}
+.who{display:flex;align-items:center;gap:12px}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff}
+.who b{display:block;font-size:14px}
+.who span{font-size:12px;color:#6b7280}
+.cta{background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:16px;padding:64px 32px;color:#fff;text-align:center}
+.cta h2{font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+.cta p{margin:14px auto 28px;max-width:520px;color:rgba(255,255,255,.85);font-size:17px}
+.cta .btn-white{background:#fff;color:#4f46e5}
+.cta .btn-white:hover{background:#eef2ff}
+footer{background:#111827;color:#9ca3af;padding:64px 0 32px;margin-top:96px}
+.foot-grid{display:grid;grid-template-columns:1.5fr repeat(4,1fr);gap:32px}
+.foot-grid h4{color:#fff;font-size:13px;font-weight:600;margin:0 0 14px;text-transform:uppercase;letter-spacing:.06em}
+.foot-grid ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.foot-grid a{color:#9ca3af}.foot-grid a:hover{color:#fff}
+.foot-brand .logo{color:#fff}
+.foot-brand p{font-size:14px;margin-top:12px;max-width:280px}
+.foot-bottom{border-top:1px solid #1f2937;margin-top:48px;padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px}
+@media (max-width:960px){
+  .features,.pricing,.testis{grid-template-columns:1fr}
+  .app{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+@media (max-width:600px){
+  .hours{grid-template-columns:repeat(4,1fr)}
+  .section{padding:64px 0}
+  .foot-grid{grid-template-columns:1fr}
+  .nav-cta .btn-ghost{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<nav>
+  <div class="container nav-inner">
+    <a class="logo" href="#">
+      <span class="mark"><svg viewBox="0 0 24 24"><path d="M7 18a5 5 0 0 1 0-10 7 7 0 0 1 13 2 4 4 0 0 1 0 8z"/></svg></span>
+      Weather.ai
+    </a>
+    <div class="nav-links"><a href="#features">功能</a><a href="#pricing">定價</a><a href="#">文件</a><a href="#">部落格</a></div>
+    <div class="nav-cta"><a class="btn btn-ghost" href="#">登入</a><a class="btn btn-primary" href="#">免費開始</a></div>
+  </div>
+</nav>
+
+<header class="hero text-center">
+  <div class="container">
+    <span class="eyebrow">🚀 全新 v2.0 現已推出 <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2.5"><path d="M9 6l6 6-6 6"/></svg></span>
+    <h1><span class="gradient-text">天氣，重新想像。</span></h1>
+    <div class="tagline">Weather, reimagined.</div>
+    <p class="sub">Weather.ai 用 AI 驅動的預報引擎，讓桃園市十三區的天氣一目了然。即時、精準、美觀——只需要一個頁面。</p>
+    <div class="hero-btns">
+      <a class="btn btn-primary" href="#">免費開始 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-outline" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8l6 4-6 4z"/></svg> 觀看示範</a>
+    </div>
+    <div class="trust">
+      <p>已有 10,000+ 使用者信任</p>
+      <div class="logos">
+        <span><i></i>Acme Corp</span><span><i></i>Globex</span><span><i></i>Initech</span><span><i></i>Umbrella</span><span><i></i>Hooli</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="shot">
+      <div class="shot-bar"><i></i><i></i><i></i><span class="url">weather.ai/taoyuan · 2026-09-04 週五 · 更新 15:20</span></div>
+      <div class="app">
+        <div class="side">
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><circle cx="12" cy="12" r="5"/></svg>桃園市 · 現在天氣</h3>
+            <div class="now">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 64 64"><circle cx="24" cy="24" r="11" fill="#fbbf24"/><path d="M20 50a9 9 0 0 1-1-18 13 13 0 0 1 25 4 8 8 0 0 1 1 14z" fill="#fff" stroke="#c7d2fe" stroke-width="2"/></svg>
+              </div>
+              <div>
+                <div class="temp">31<small>°C</small></div>
+                <div class="cond">多雲，午後雷陣雨 · 體感 36°C</div>
+                <div class="badges">
+                  <span class="badge sky">濕度 74%</span>
+                  <span class="badge">西南風 3.2 m/s</span>
+                  <span class="badge amber">UV 8 過量</span>
+                  <span class="badge indigo">降雨 40%</span>
+                  <span class="badge">1006 hPa</span>
+                  <span class="badge">能見度 12 km</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>逐時預報</h3>
+            <div class="hours">
+              <div class="hour now-h"><span class="h">現在</span><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="4" fill="#fbbf24"/><path d="M8 19a3.5 3.5 0 0 1 0-7 5 5 0 0 1 9.5 1.5A3 3 0 0 1 17 19z" fill="#fff" stroke="#94a3b8"/></svg><span class="t">31°</span><span class="p">30%</span></div>
+              <div class="hour"><span class="h">17時</span><svg viewBox="0 0 24 24"><path d="M7 16a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 16z" fill="#e2e8f0" stroke="#94a3b8"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg><span class="t">30°</span><span class="p">55%</span></div>
+              <div class="hour"><span class="h">18時</span><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 15z" fill="#cbd5e1" stroke="#64748b"/><path d="M13 14l-2 4h3l-2 4" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="t">28°</span><span class="p">60%</span></div>
+              <div class="hour"><span class="h">19時</span><svg viewBox="0 0 24 24"><path d="M7 16a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 16z" fill="#e2e8f0" stroke="#94a3b8"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg><span class="t">27°</span><span class="p">40%</span></div>
+              <div class="hour"><span class="h">20時</span><svg viewBox="0 0 24 24"><path d="M7 17a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 17z" fill="#e2e8f0" stroke="#94a3b8"/></svg><span class="t">27°</span><span class="p">20%</span></div>
+              <div class="hour"><span class="h">21時</span><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 1 0 5 14 7 7 0 0 1-5-14z" fill="#fde68a" stroke="#f59e0b"/></svg><span class="t">26°</span><span class="p">10%</span></div>
+              <div class="hour"><span class="h">22時</span><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 1 0 5 14 7 7 0 0 1-5-14z" fill="#fde68a" stroke="#f59e0b"/></svg><span class="t">26°</span><span class="p">5%</span></div>
+              <div class="hour"><span class="h">23時</span><svg viewBox="0 0 24 24"><path d="M15 4a8 8 0 1 0 5 14 7 7 0 0 1-5-14z" fill="#fde68a" stroke="#f59e0b"/></svg><span class="t">26°</span><span class="p">5%</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>未來七天</h3>
+            <div class="days">
+              <div class="day"><span class="n">週五</span><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 15z" fill="#cbd5e1" stroke="#64748b"/><path d="M13 14l-2 4h3l-2 4" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="c">雷陣雨</span><span class="hl">33°<span>26°</span></span></div>
+              <div class="day"><span class="n">週六</span><svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 15z" fill="#cbd5e1" stroke="#64748b"/><path d="M13 14l-2 4h3l-2 4" fill="none" stroke="#f59e0b" stroke-width="1.6" stroke-linejoin="round"/></svg><span class="c">雷陣雨</span><span class="hl">32°<span>26°</span></span></div>
+              <div class="day"><span class="n">週日</span><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="4" fill="#fbbf24"/><path d="M8 19a3.5 3.5 0 0 1 0-7 5 5 0 0 1 9.5 1.5A3 3 0 0 1 17 19z" fill="#fff" stroke="#94a3b8"/></svg><span class="c">多雲</span><span class="hl">31°<span>25°</span></span></div>
+              <div class="day"><span class="n">週一</span><svg viewBox="0 0 24 24"><path d="M7 16a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 16z" fill="#e2e8f0" stroke="#94a3b8"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg><span class="c">陣雨</span><span class="hl">30°<span>25°</span></span></div>
+              <div class="day"><span class="n">週二</span><svg viewBox="0 0 24 24"><path d="M7 16a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 18 16z" fill="#e2e8f0" stroke="#94a3b8"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/></svg><span class="c">陣雨</span><span class="hl">29°<span>25°</span></span></div>
+              <div class="day"><span class="n">週三</span><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="4" fill="#fbbf24"/><path d="M8 19a3.5 3.5 0 0 1 0-7 5 5 0 0 1 9.5 1.5A3 3 0 0 1 17 19z" fill="#fff" stroke="#94a3b8"/></svg><span class="c">多雲</span><span class="hl">31°<span>25°</span></span></div>
+              <div class="day"><span class="n">週四</span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="#fbbf24"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4" stroke="#f59e0b" stroke-width="1.6" stroke-linecap="round"/></svg><span class="c">晴</span><span class="hl">32°<span>26°</span></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><path d="M3 17c3-4 5-4 8 0s5 4 10-2"/><path d="M3 11c3-4 5-4 8 0s5 4 10-2"/></svg>空氣品質</h3>
+            <div class="aqi">
+              <div class="num">42</div>
+              <div><span class="st">良好</span><div class="meta">AQI 42 · PM2.5 11 μg/m³ · 適合戶外活動</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><path d="M3 18h18M5 18a7 7 0 0 1 14 0M12 3v3M4.2 8.2l2.1 2.1M19.8 8.2l-2.1 2.1"/></svg>太陽</h3>
+            <div class="sun"><div><b>05:36</b><span>日出</span></div><div><b>18:16</b><span>日落</span></div></div>
+          </div>
+          <div class="card">
+            <h3><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>十三區現在</h3>
+            <div class="dist">
+              <div class="d"><div class="n">桃園區</div><div class="t">31°</div></div>
+              <div class="d"><div class="n">中壢區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">平鎮區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">八德區</div><div class="t">31°</div></div>
+              <div class="d"><div class="n">楊梅區</div><div class="t">29°</div></div>
+              <div class="d"><div class="n">蘆竹區</div><div class="t">31°</div></div>
+              <div class="d"><div class="n">大溪區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">龜山區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">大園區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">龍潭區</div><div class="t">29°</div></div>
+              <div class="d"><div class="n">新屋區</div><div class="t">29°</div></div>
+              <div class="d"><div class="n">觀音區</div><div class="t">30°</div></div>
+              <div class="d"><div class="n">復興區</div><div class="t">25°</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-head text-center">
+      <span class="eyebrow">功能</span>
+      <h2>你需要的一切，都在一個頁面裡</h2>
+      <p>我們把複雜的氣象資料變成任何人都看得懂的介面。</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg></div>
+        <h3>即時更新</h3>
+        <p>每 10 分鐘自動同步最新觀測，讓你永遠掌握桃園此刻的天氣。</p>
+      </div>
+      <div class="feature">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg></div>
+        <h3>AI 預測</h3>
+        <p>結合機器學習與氣象模型，為午後雷陣雨提供更聰明的提醒。</p>
+      </div>
+      <div class="feature">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+        <h3>十三區覆蓋</h3>
+        <p>從桃園區到復興區，每一個行政區都有專屬的即時氣溫。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing" style="background:#f9fafb">
+  <div class="container">
+    <div class="section-head text-center">
+      <span class="eyebrow">定價</span>
+      <h2>簡單透明的方案</h2>
+      <p>從免費開始，隨時升級。沒有隱藏費用。</p>
+    </div>
+    <div class="pricing">
+      <div class="plan">
+        <div class="name">Free</div>
+        <div class="desc">適合個人使用</div>
+        <div class="price">$0<small> / 月</small></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>桃園市即時天氣</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>逐時與七天預報</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>基本空氣品質</li>
+        </ul>
+        <a class="btn btn-outline" href="#">免費開始</a>
+      </div>
+      <div class="plan pop">
+        <span class="tag">最受歡迎</span>
+        <div class="name">Pro</div>
+        <div class="desc">適合天氣重度使用者</div>
+        <div class="price">$9<small> / 月</small></div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Free 的所有功能</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>AI 雷陣雨預警</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>十三區 3D 地圖</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>三十天歷史回顧</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>優先客服支援</li>
+        </ul>
+        <a class="btn btn-primary" href="#">開始 14 天免費試用</a>
+      </div>
+      <div class="plan">
+        <div class="name">Enterprise</div>
+        <div class="desc">適合團隊與組織</div>
+        <div class="price" style="font-size:32px">聯絡我們</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Pro 的所有功能</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>API 存取</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>SSO 與權限管理</li>
+          <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>專屬客戶經理</li>
+        </ul>
+        <a class="btn btn-outline" href="#">聯絡業務</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head text-center">
+      <span class="eyebrow">使用者心得</span>
+      <h2>桃園人都在用</h2>
+      <p>聽聽他們怎麼說。</p>
+    </div>
+    <div class="testis">
+      <div class="testi">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg></div>
+        <p>「自從用了 Weather.ai，我再也沒有在中壢被午後雷陣雨淋成落湯雞。改變人生。」</p>
+        <div class="who"><div class="avatar" style="background:#6366f1">林</div><div><b>林小姐</b><span>中壢區 · 上班族</span></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg></div>
+        <p>「介面漂亮到我每天早上都想打開看一下。就算沒有要出門。」</p>
+        <div class="who"><div class="avatar" style="background:#ec4899">陳</div><div><b>陳先生</b><span>桃園區 · 設計師</span></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .6-5.3 4.7 1.7 7-6.4-3.9L5.6 21l1.7-7L2 9.6 9 9z"/></svg></div>
+        <p>「復興區山上的溫度真的比市區低六度，Weather.ai 說的都是真的。10/10 推薦。」</p>
+        <div class="who"><div class="avatar" style="background:#8b5cf6">黃</div><div><b>黃同學</b><span>復興區 · 學生</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container">
+    <div class="cta">
+      <h2>準備好重新想像天氣了嗎？</h2>
+      <p>加入 10,000+ 桃園人的行列。不需要信用卡，30 秒完成設定。</p>
+      <a class="btn btn-white" href="#">免費開始 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><span class="mark"><svg viewBox="0 0 24 24"><path d="M7 18a5 5 0 0 1 0-10 7 7 0 0 1 13 2 4 4 0 0 1 0 8z"/></svg></span>Weather.ai</div>
+        <p>用 AI 讓桃園的天氣更好懂。</p>
+      </div>
+      <div><h4>產品</h4><ul><li><a href="#">功能</a></li><li><a href="#">定價</a></li><li><a href="#">更新日誌</a></li><li><a href="#">路線圖</a></li></ul></div>
+      <div><h4>資源</h4><ul><li><a href="#">文件</a></li><li><a href="#">API</a></li><li><a href="#">部落格</a></li><li><a href="#">社群</a></li></ul></div>
+      <div><h4>公司</h4><ul><li><a href="#">關於我們</a></li><li><a href="#">職缺</a></li><li><a href="#">聯絡我們</a></li><li><a href="#">媒體</a></li></ul></div>
+      <div><h4>法律</h4><ul><li><a href="#">隱私權</a></li><li><a href="#">服務條款</a></li><li><a href="#">Cookie</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Weather.ai · 示範資料，非即時觀測</span>
+      <span>資料來源：<a href="https://open-meteo.com/" rel="noopener">Open-Meteo</a></span>
+    </div>
+  </div>
+</footer>

@@ -19,3 +19,7 @@ The five canonical triage roles use their default label names (`needs-triage`, `
 ### Domain docs
 
 Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+### Design language
+
+Before changing any visual styling (colors, type, radii, layout, motion), read `docs/agents/design-slop.md`: the project's visual language and the ten counter-examples in `design/vibe-slop/`.

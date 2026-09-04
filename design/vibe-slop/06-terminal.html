@@ -1,0 +1,138 @@
+<title>taoyuan.sh</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0c0c0c;color:#33ff33;font-family:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;font-size:14px;line-height:1.5;min-height:100vh;padding:24px 12px 48px;overflow-x:hidden;text-shadow:0 0 6px rgba(51,255,51,.45)}
+a{color:#b6ffb6}
+.crt{position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.72) 100%)}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:6;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 4px);mix-blend-mode:multiply}
+.win{max-width:960px;margin:0 auto;border:1px solid #1f9e1f;background:#050805;box-shadow:0 0 0 1px #0c0c0c,0 0 40px rgba(51,255,51,.12)}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #1f9e1f;background:#0a120a;color:#b6ffb6;font-size:12px}
+.bar .dots{display:flex;gap:6px}
+.bar .dots i{width:12px;height:12px;border-radius:50%;border:1px solid #1f9e1f;background:#0c0c0c}
+.bar .dots i:nth-child(1){background:#ff5f56;border-color:#ff5f56}
+.bar .dots i:nth-child(2){background:#ffbd2e;border-color:#ffbd2e}
+.bar .dots i:nth-child(3){background:#27c93f;border-color:#27c93f}
+.bar .title{flex:1;text-align:center;text-shadow:none}
+.body{padding:16px 16px 20px;overflow-x:auto}
+pre{margin:0;font:inherit;white-space:pre;overflow-x:auto;tab-size:4}
+.dim{color:#1f9e1f;text-shadow:none}
+.bright{color:#b6ffb6;font-weight:600}
+.ok{color:#b6ffb6}
+.warn{color:#ffd84d;text-shadow:0 0 6px rgba(255,216,77,.4)}
+.p{color:#b6ffb6}
+.p::before{content:"gurumi@taoyuan ~ $ ";color:#1f9e1f}
+.gap{height:14px}
+.banner{color:#b6ffb6;line-height:1.15;font-size:clamp(9px,1.6vw,14px)}
+.cmd1{display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;border-right:2px solid #33ff33;animation:type 2.2s steps(38,end) 1 both,caret .8s step-end 3;width:38ch}
+@keyframes type{from{width:0}to{width:38ch}}
+@keyframes caret{50%{border-color:transparent}}
+.cursor{display:inline-block;width:.6em;height:1.1em;background:#33ff33;vertical-align:text-bottom;animation:blink 1s step-end infinite;box-shadow:0 0 8px #33ff33}
+@keyframes blink{50%{opacity:0}}
+.bar1{color:#33ff33}
+.bar1 .fill{color:#b6ffb6}
+.legend{margin-top:10px;font-size:12px;color:#1f9e1f;text-shadow:none}
+@media (prefers-reduced-motion:reduce){
+  .cmd1{animation:none;border-right:0;width:auto}
+  .cursor{animation:none}
+}
+</style>
+
+<div class="crt" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+
+<div class="win" role="region" aria-label="桃園天氣終端機">
+  <div class="bar">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="title">gurumi@taoyuan: ~ — zsh — 96×48</div>
+  </div>
+  <div class="body">
+<pre class="dim">Last login: Fri Sep  4 15:19:47 2026 on ttys003
+taoyuan.sh v0.4.2 — weather cli for 桃園市 · 13 districts · open-meteo backend</pre>
+<div class="gap"></div>
+<pre class="banner" aria-label="TAOYUAN">████████╗ █████╗  ██████╗ ██╗   ██╗██╗   ██╗ █████╗ ███╗   ██╗
+╚══██╔══╝██╔══██╗██╔═══██╗╚██╗ ██╔╝██║   ██║██╔══██╗████╗  ██║
+   ██║   ███████║██║   ██║ ╚████╔╝ ██║   ██║███████║██╔██╗ ██║
+   ██║   ██╔══██║██║   ██║  ╚██╔╝  ██║   ██║██╔══██║██║╚██╗██║
+   ██║   ██║  ██║╚██████╔╝   ██║   ╚██████╔╝██║  ██║██║ ╚████║
+   ╚═╝   ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
+<div class="gap"></div>
+<pre><span class="p"></span><span class="cmd1">weather --city taoyuan --lang zh-TW</span>
+<span class="ok">[OK]</span> resolving 桃園市 → 24.9936°N 121.3010°E
+<span class="ok">[OK]</span> connected to open-meteo (142 ms)
+<span class="ok">[OK]</span> 13 districts loaded
+<span class="ok">[OK]</span> cache: hit (updated 15:20)</pre>
+<div class="gap"></div>
+<pre><span class="bright">NOW · 桃園市 · 2026-09-04 (週五) 15:20</span>
+
+      <span class="bright">\  /</span>       <span class="bright">31°C</span>  多雲，午後雷陣雨
+    <span class="bright">_ /""</span>.-.     體感    36°C
+      <span class="bright">\_(   ).</span>   風      西南風 3.2 m/s
+      <span class="bright">/(___(__)</span>  降雨    40%
+     <span class="dim">‘ ‘ ‘ ‘</span>     氣壓    1006 hPa
+    <span class="dim">‘ ‘ ‘ ‘</span>      能見度  12 km
+
+濕度   <span class="bar1">[<span class="fill">███████████████</span>░░░░░]</span>  74%
+紫外線 <span class="bar1">[<span class="fill">████████████████</span>░░░░]</span>  8 <span class="warn">(過量)</span>
+降雨   <span class="bar1">[<span class="fill">████████</span>░░░░░░░░░░░░]</span>  40%</pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --hourly --next 8
+
+┌────────┬───────┬───────┬───────┬───────┬───────┬───────┬───────┬───────┐
+│  時間  │ 16時  │ 17時  │ 18時  │ 19時  │ 20時  │ 21時  │ 22時  │ 23時  │
+├────────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┤
+│  氣溫  │  31°  │  30°  │  28°  │  27°  │  27°  │  26°  │  26°  │  26°  │
+│  降雨  │  30%  │  55%  │  60%  │  40%  │  20%  │  10%  │   5%  │   5%  │
+│  圖示  │  ☁/   │  ///  │  ⚡//  │  ///  │  ☁    │  ☁    │  )    │  )    │
+└────────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┘
+<span class="dim">  /// rain   ⚡ thunder   ☁ cloud   ) clear night</span></pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --daily --days 7
+
+┌────────┬──────┬──────┬────────────┬──────────────────────┐
+│  日期  │  高  │  低  │    天氣    │  趨勢                │
+├────────┼──────┼──────┼────────────┼──────────────────────┤
+│  週五  │  33° │  26° │  雷陣雨    │  <span class="bright">████████████████</span>  ← │
+│  週六  │  32° │  26° │  雷陣雨    │  <span class="bright">███████████████</span>     │
+│  週日  │  31° │  25° │  多雲      │  <span class="bright">██████████████</span>      │
+│  週一  │  30° │  25° │  陣雨      │  <span class="bright">█████████████</span>       │
+│  週二  │  29° │  25° │  陣雨      │  <span class="bright">████████████</span>        │
+│  週三  │  31° │  25° │  多雲      │  <span class="bright">██████████████</span>      │
+│  週四  │  32° │  26° │  晴        │  <span class="bright">███████████████</span>     │
+└────────┴──────┴──────┴────────────┴──────────────────────┘</pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --districts --sort temp
+
+┌──────┬──────────┬──────┐   ┌──────┬──────────┬──────┐
+│  #   │  行政區  │ 氣溫 │   │  #   │  行政區  │ 氣溫 │
+├──────┼──────────┼──────┤   ├──────┼──────────┼──────┤
+│  01  │  桃園區  │ 31°  │   │  08  │  大溪區  │ 30°  │
+│  02  │  八德區  │ 31°  │   │  09  │  大園區  │ 30°  │
+│  03  │  蘆竹區  │ 31°  │   │  10  │  觀音區  │ 30°  │
+│  04  │  中壢區  │ 30°  │   │  11  │  楊梅區  │ 29°  │
+│  05  │  平鎮區  │ 30°  │   │  12  │  龍潭區  │ 29°  │
+│  06  │  龜山區  │ 30°  │   │  13  │  新屋區  │ 29°  │
+│  07  │  <span class="dim">─</span>       │      │   │  <span class="warn">14</span>  │  <span class="warn">復興區</span>  │ <span class="warn">25°</span>  │
+└──────┴──────────┴──────┘   └──────┴──────────┴──────┘
+<span class="dim">  13 rows · max 31° (桃園區) · min 25° (復興區) · Δ 6°</span></pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --aqi
+<span class="ok">[OK]</span> air-quality-api.open-meteo.com (98 ms)
+
+AQI     <span class="bright">42</span>   <span class="ok">GOOD / 良好</span>
+PM2.5   11 μg/m³
+<span class="bar1">[<span class="fill">████</span>░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]</span> 42 / 500</pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --sun
+
+日出    05:36   ─────────────────────●──────── 18:16   日落
+        <span class="dim">daylight 12h40m · now 15:20 · 2h56m until sunset</span></pre>
+<div class="gap"></div>
+<pre><span class="p"></span>weather --about
+taoyuan.sh — 示範資料，非即時觀測
+資料來源：Open-Meteo &lt;<a href="https://open-meteo.com/" rel="noopener">https://open-meteo.com/</a>&gt;
+license: MIT · built with rage and green phosphor</pre>
+<div class="gap"></div>
+<pre><span class="p"></span><span class="cursor" aria-hidden="true"></span></pre>
+  </div>
+</div>
